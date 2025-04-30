@@ -1,0 +1,220 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+  <!-- Inherit layout from default admin layout -->
+  <!-- (기본 관리자 레이아웃 상속) -->
+<head>
+    <style>
+        .commit-header {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-left: 4px;
+        }
+        .code-container {
+            background-color: #f9fafb;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+        .code-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #111827;
+        }
+        .code-box {
+            background-color: transparent;
+            padding: 0;
+            border: none;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 2px 8px;
+            font-size: 12px;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #e5e7eb;
+        }
+        .commit-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+        }
+        .commit-grid .code-container {
+            flex: 1 1 calc(25% - 8px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div>
+
+
+
+        <div class="commit-header">✅ 커밋 메시지 규칙</div>
+        <div class="commit-grid">
+<div class="code-container">
+  <div class="code-title">✨ 새로운 기능 추가</div>
+  <button class="copy-btn" onclick="copyCode('featureCode')">복사</button>
+  <pre class="code-box" id="featureCode">✨ feature : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🐛 버그 수정</div>
+  <button class="copy-btn" onclick="copyCode('fixCode')">복사</button>
+  <pre class="code-box" id="fixCode">🐛 fix : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">♻️ 코드 리팩토링</div>
+  <button class="copy-btn" onclick="copyCode('refactorCode')">복사</button>
+  <pre class="code-box" id="refactorCode">♻️ refactor : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">📝 문서 수정 (README 등)</div>
+  <button class="copy-btn" onclick="copyCode('docsCode')">복사</button>
+  <pre class="code-box" id="docsCode">📝 docs : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">💄 코드 스타일 변경 (세미콜론, 띄어쓰기 등)</div>
+  <button class="copy-btn" onclick="copyCode('styleCode')">복사</button>
+  <pre class="code-box" id="styleCode">💄 style : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">✅ 테스트 코드 추가/수정</div>
+  <button class="copy-btn" onclick="copyCode('testCode')">복사</button>
+  <pre class="code-box" id="testCode">✅ test : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🔧 빌드, 설정 관련</div>
+  <button class="copy-btn" onclick="copyCode('choreCode')">복사</button>
+  <pre class="code-box" id="choreCode">🔧 chore :<mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🚀 성능 개선</div>
+  <button class="copy-btn" onclick="copyCode('perfCode')">복사</button>
+  <pre class="code-box" id="perfCode">🚀 perf : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🔥 코드 삭제</div>
+  <button class="copy-btn" onclick="copyCode('removeCode')">복사</button>
+  <pre class="code-box" id="removeCode">🔥 remove : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🚧 작업 중 (Work in progress)</div>
+  <button class="copy-btn" onclick="copyCode('wipCode')">복사</button>
+  <pre class="code-box" id="wipCode">🚧 wip : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🗃️ DB 관련 작업 (스키마 등)</div>
+  <button class="copy-btn" onclick="copyCode('dbCode')">복사</button>
+  <pre class="code-box" id="dbCode">🗃️ db : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🔀 브랜치 병합</div>
+  <button class="copy-btn" onclick="copyCode('mergeCode')">복사</button>
+  <pre class="code-box" id="mergeCode">🔀 merge : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🐳  도커 관련 작업</div>
+  <button class="copy-btn" onclick="copyCode('dockerCode')">복사</button>
+  <pre class="code-box" id="dockerCode">🐳 docker : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+
+<div class="code-container">
+  <div class="code-title">🔒 보안 관련 수정</div>
+  <button class="copy-btn" onclick="copyCode('securityCode')">복사</button>
+  <pre class="code-box" id="securityCode">🔒 security : <mark>커밋 메세지 작성</mark>
+
+- 상세 설명 1
+- 상세 설명 2 (선택)</pre>
+</div>
+        </div>
+
+<script>
+function copyCode(id) {
+  const code = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    alert("복사 완료!");
+  });
+}
+</script>
+
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head></head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div>
+    <h1>PR Convention</h1>
+        <div id="copyBox" style="position: relative; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; background-color: #f9f9f9; font-family: monospace;">
+            <button onclick="copyContent()" style="position: absolute; top: 8px; right: 8px; background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">복사</button>
+            <pre style="white-space: pre-wrap; margin: 0;">
+## 📌 작업 개요
+- 작업 요약
+
+## 🔧 변경 사항
+- 기능 1
+- 기능 2
+
+## 📝 리뷰 요청 사항
+- 어떤 부분을 중점적으로 봐줬으면 좋겠는지
+            </pre>
+        </div>
+<br><br>
+        <h1>PR Example</h1>
+        <div style="position: relative; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; background-color: #f4f8ff; font-family: monospace; margin-top: 1rem;">
+            <button onclick="copyExample()" style="position: absolute; top: 8px; right: 8px; background-color: #2196F3; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">예시 복사</button>
+            <pre style="white-space: pre-wrap; margin: 0;">
+## 📌 작업 개요
+- 상품 관리 페이지에서 필터 기능 추가
+
+## 🔧 변경 사항
+- 상품 조회에 필터 조건 추가 (카테고리, 상태, 재고량)
+- 기존 서비스 로직에 조건 분기 추가
+- 관련된 프론트 페이지 옵션 연동
+
+## 📝 리뷰 요청 사항
+- 조건 필터 조합 시 누락되는 케이스 있는지 확인 요청
+- QueryDSL로 개선 가능성 여부 코멘트 부탁드립니다
+            </pre>
+        </div>
+        <script>
+            function copyExample() {
+                const text = `## 📌 작업 개요
+- 상품 관리 페이지에서 필터 기능 추가
+
+## 🔧 변경 사항
+- 상품 조회에 필터 조건 추가 (카테고리, 상태, 재고량)
+- 기존 서비스 로직에 조건 분기 추가
+- 관련된 프론트 페이지 옵션 연동
+
+## 📝 리뷰 요청 사항
+- 조건 필터 조합 시 누락되는 케이스 있는지 확인 요청
+- QueryDSL로 개선 가능성 여부 코멘트 부탁드립니다`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('복사되었습니다.');
+                });
+            }
+        </script>
+
+        <script>
+            function copyContent() {
+                const text = `### 🔧 작업 내용
+- [ ] 작업 요약
+
+### 📌 참고 사항
+- [ ] 참고할 점`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('복사되었습니다.');
+                });
+            }
+        </script>
+    </div>
+</div>
+
+
+</body>
+</html>

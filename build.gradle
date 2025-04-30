@@ -45,6 +45,7 @@ dependencies {
 	// (타임리프 확장 라이브러리)
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	// Lombok for reducing boilerplate code
 	// (롬복 - 반복되는 코드 제거용)

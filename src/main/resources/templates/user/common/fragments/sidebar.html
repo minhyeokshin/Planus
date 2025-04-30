@@ -1,0 +1,80 @@
+<div th:fragment="sidebarFragment">
+
+    <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+            <a class="sidebar-brand" th:href="@{/user/pages/index}">
+                <span class="align-middle">Planus</span>
+            </a>
+
+            <ul class="sidebar-nav">
+                <li class="sidebar-header">
+                    Pages
+                </li>
+
+                <li class="sidebar-item active">
+                    <a class="sidebar-link" th:href="@{/user/pages/index}">
+                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/calendar/calendar}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">캘린더</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/convention/commit}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">Commit Convention</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/convention/pr}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">PR Convention</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/convention/issue}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">Issue Convention</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-1}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">게시판 1</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-2}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">게시판 2</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-3}">
+                        <i class="align-middle" data-feather="square"></i>
+                        <span class="align-middle">게시판 3</span>
+                    </a>
+                </li>
+
+
+
+
+            </ul>
+
+
+        </div>
+    </nav>
+
+
+
+</div>
