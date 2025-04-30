@@ -1,0 +1,95 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head>
+  <style>
+    .board-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 30px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .board-table thead {
+      background-color: #f1f3f5;
+    }
+
+    .board-table th,
+    .board-table td {
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .board-table th {
+      font-weight: bold;
+      color: #333;
+      font-size: 0.95rem;
+    }
+
+    .board-table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .write-btn-wrapper {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .write-btn {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .write-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div class="write-btn-wrapper">
+        <a th:href="@{/user/pages/api/boardwrite}">
+            <button type="button" class="write-btn">✏ 글쓰기</button>
+        </a>
+    </div>
+    <table class="board-table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr onclick="location.href='/user/pages/api/boardRead'" style="cursor:pointer;">
+                <td>1</td>
+                <td>샘플 게시글 제목</td>
+                <td>관리자</td>
+                <td>2025-04-30</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>
