@@ -25,14 +25,19 @@ public class TempController {
     @GetMapping("/calendar/calendar")
     public String calendar() { return "user/pages/calendar/calendar"; }
 
-    @GetMapping("/board/board-1")
-    public String board1() { return "user/pages/board/board-1"; }
+    @GetMapping("/board/commitList")
+    public String board1() { return "user/pages/board/commitList"; }
 
-    @GetMapping("board/board-2")
-    public String board2() { return "user/pages/board/board-2"; }
+    @GetMapping("/board/prList")
+    public String board2() { return "user/pages/board/prList"; }
 
-    @GetMapping("board/board-3")
-    public String board3() { return "user/pages/board/board-3"; }
+    @GetMapping("/api/boardwrite")
+    public String board3() { return "user/pages/api/boardwrite"; }
 
+    @GetMapping("/board/board")
+    public String board() { return "user/pages/board/board"; }
+
+    @GetMapping("/api/boardRead")
+    public String boardRead() { return "user/pages/api/boardRead"; }
 
 }

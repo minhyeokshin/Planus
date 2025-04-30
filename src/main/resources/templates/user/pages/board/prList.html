@@ -1,0 +1,94 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+  <!-- Inherit layout from default admin layout -->
+  <!-- (기본 관리자 레이아웃 상속) -->
+<head>
+<style>
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1em;
+  }
+
+  th {
+    background-color: #f0f4f8;
+    color: #333;
+    font-weight: 600;
+    text-align: left;
+    padding: 1em;
+    border-bottom: 1px solid #ddd;
+  }
+
+  td {
+    padding: 1em;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+
+  tr:hover {
+    background-color: #f9fbfc;
+  }
+
+  a {
+    color: #007bff;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div>
+      <h2>📦 최근 Pull Request 목록</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>날짜</th>
+            <th>상태</th>
+            <th>링크</th>
+          </tr>
+        </thead>
+        <tbody id="pr-body"></tbody>
+      </table>
+
+      <script>
+        fetch("https://api.github.com/repos/Buildify-SSG/Buildify_Phase-2/pulls?state=all")
+          .then(res => res.json())
+          .then(data => {
+            const tbody = document.getElementById("pr-body");
+            data.slice(0, 10).forEach(pr => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>${pr.title}</td>
+                <td>${pr.user.login}</td>
+                <td>${new Date(pr.created_at).toLocaleString()}</td>
+                <td>${pr.state === 'open' ? '🟢 오픈' : (pr.merged_at ? '🟣 머지됨' : '🔴 클로즈')}</td>
+                <td><a href="${pr.html_url}" target="_blank">🔗 이동</a></td>
+              `;
+              tbody.appendChild(tr);
+            });
+          });
+      </script>
+    </div>
+</div>
+
+
+</body>
+</html>
