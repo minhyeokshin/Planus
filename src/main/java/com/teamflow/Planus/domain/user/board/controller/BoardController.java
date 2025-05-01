@@ -21,7 +21,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board-{boardId}")
-    public String board(@PathVariable("boardId") int boardId, Model model) {
+    public String board(@PathVariable("boardId") String boardId, Model model) {
         List<BoardDTO> boardDTOList = boardService.getBoardList(boardId);
         model.addAttribute("boardList", boardDTOList);
         return "/user/pages/board/board-" + boardId;

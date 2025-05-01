@@ -19,4 +19,5 @@ public class BoardVO {
     private LocalDateTime createdAt;
     private String title;
     private String content;
+    private int status;
 }

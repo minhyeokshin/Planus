@@ -17,5 +17,6 @@ public class CommentVO {
     private String userName;
     private int boardId;
     private String content;
+    private int status;
     private LocalDateTime createdAt;
 }
