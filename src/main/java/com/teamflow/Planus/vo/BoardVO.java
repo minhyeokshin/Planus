@@ -15,6 +15,7 @@ public class BoardVO {
     private String writeId;
     private String boardId;
     private String userId;
+    private String userName;
     private LocalDateTime createdAt;
     private String title;
     private String content;

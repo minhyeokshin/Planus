@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper">
+    
+    <insert id="write">
+        INSERT INTO board (board_id, user_id, created_at, title, content) values
+                              (#{boardId},#{userId},convert_tz(now(), 'UTC', 'Asia/Seoul'),#{title},#{content})
+    </insert>
+</mapper>

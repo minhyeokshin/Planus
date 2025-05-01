@@ -65,8 +65,11 @@
 <div layout:fragment="content">
     <!-- Main content area to be injected into layout -->
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div style="margin-top: 20px; text-align: center;">
+      <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin: 0;">📋 회의록</h1>
+    </div>
     <div class="write-btn-wrapper">
-        <a th:href="@{/user/pages/api/boardwrite}">
+        <a th:href="@{/user/pages/api/boardwrite?boardId=2}">
             <button type="button" class="write-btn">✏ 글쓰기</button>
         </a>
     </div>
@@ -80,16 +83,27 @@
             </tr>
         </thead>
         <tbody>
-        <tr onclick="location.href='/user/pages/api/boardRead'" style="cursor:pointer;">
-                <td>1</td>
-                <td>샘플 게시글 제목</td>
-                <td>관리자</td>
-                <td>2025-04-30</td>
-            </tr>
+        <tr th:each="board : ${boardList}"
+            th:attr="data-board-id=${board.writeId}"
+            onclick="goToBoard(this)"
+            style="cursor:pointer;">
+            <td th:text="${board.writeId}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.userName}"></td>
+            <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
         </tbody>
     </table>
+
+    <script>
+        function goToBoard(element) {
+            const id = element.getAttribute('data-board-id');
+            window.location.href = '/user/pages/api/boardRead/' + id;
+        }
+    </script>
 </div>
 
 
 </body>
+
 </html>
