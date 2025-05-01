@@ -1,9 +1,9 @@
 <!-- Thymeleaf template for Submenu Page -->
 <!-- (서브메뉴 페이지용 타임리프 템플릿) -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{user/common/layouts/defaultLayout}">
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{user/common/layouts/defaultLayout}">
 <!-- Inherit layout from default admin layout -->
 <!-- (기본 관리자 레이아웃 상속) -->
 <head></head>
@@ -72,11 +72,15 @@
 
         <script>
             function copyContent() {
-                const text = `### 🔧 작업 내용
-- [ ] 작업 요약
+                const text = `### 📌 이슈 내용
+간단한 설명
 
-### 📌 참고 사항
-- [ ] 참고할 점`;
+### ✅ 작업 항목
+- [ ] 할 일 1
+- [ ] 할 일 2
+
+### 💬 참고
+예상되는 영향이나 고민`;
                 navigator.clipboard.writeText(text).then(() => {
                     alert('복사되었습니다.');
                 });

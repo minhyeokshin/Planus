@@ -31,7 +31,7 @@ CREATE TABLE pull_request (
 DROP TABLE IF EXISTS board;
 
 CREATE TABLE board(
-    write_id VARCHAR(100) primary key COMMENT '게시글 고유 ID',
+    write_id INTEGER auto_increment primary key COMMENT '게시글 고유 ID',
     board_id VARCHAR(100) COMMENT '게시판 ID',
     user_id VARCHAR(50) COMMENT '작성자 ID',
     created_at DATETIME COMMENT '작성일시',
@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS boardViewLog;
 CREATE TABLE boardViewLog(
     view_log VARCHAR(255) primary key COMMENT '뷰 로그 고유 ID',
     user_id VARCHAR(50) COMMENT '조회자 ID',
-    write_id VARCHAR(100) COMMENT '게시글 ID',
+    write_id INTEGER COMMENT '게시글 ID',
     view_time DATETIME COMMENT '조회 시각',
     FOREIGN KEY (write_id) REFERENCES board(write_id)
 );
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
     comment_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '댓글 고유 ID',
     user_id VARCHAR(50) COMMENT '댓글 작성자 ID',
-    board_id VARCHAR(100) COMMENT '댓글이 달린 게시글 ID',
+    board_id INTEGER COMMENT '댓글이 달린 게시글 ID',
     content TEXT NOT NULL COMMENT '댓글 내용',
     created_at DATETIME COMMENT '작성일시',
     FOREIGN KEY (user_id) REFERENCES user(user_id),
@@ -74,3 +74,11 @@ CREATE TABLE calender (
     status INTEGER DEFAULT 0 COMMENT '0: 예정, 1: 완료',
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
+
+ALTER TABLE board ADD COLUMN status TINYINT DEFAULT 0;
+-- 0: 정상, 1: 삭제
+
+ALTER TABLE comment ADD COLUMN status TINYINT DEFAULT 0;
+-- 0: 정상, 1: 삭제
+ALTER TABLE board ADD COLUMN delete_time DATETIME null;
+ALTER TABLE comment ADD COLUMN delete_time DATETIME null;

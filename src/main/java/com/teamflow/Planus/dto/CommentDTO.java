@@ -1,17 +1,17 @@
-package com.teamflow.Planus.vo;
+package com.teamflow.Planus.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @Builder(toBuilder = true)
-@AllArgsConstructor
 @NoArgsConstructor
-public class CommentVO {
+@AllArgsConstructor
+public class CommentDTO {
     private int commentId;
     private String userId;
     private String userName;

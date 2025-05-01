@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.api.mapper.BoardReadMapper">
+    <select id="findById" resultType="com.teamflow.Planus.vo.BoardVO">
+        SELECT
+            board.write_id AS writeId,
+            board.board_id AS boardId,
+            board.user_id AS userId,
+            user.username AS userName,
+            board.created_at AS createdAt,
+            board.title AS title,
+            board.content AS content
+        FROM board
+        LEFT JOIN user
+        on board.user_id = user.user_id
+        WHERE write_id = #{writeId}
+    </select>
+
+    <select id="getComment" resultType="com.teamflow.Planus.vo.CommentVO">
+        SELECT
+            comment_id AS commentId,
+            comment.user_id AS userId,
+            user.username AS userName,
+            board_id AS writeId,
+            content AS content,
+            created_at AS createdAt
+            FROM comment
+            LEFT JOIN user
+            on comment.user_id = user.user_id
+        WHERE board_id = #{writeId} and status = 0
+        ORDER BY comment_id desc;
+    </select>
+
+    <insert id="writeComment">
+        insert into comment
+        (user_id, board_id, content, created_at)
+        values
+            (#{userId},#{boardId},#{content},convert_tz(now(), 'UTC', 'Asia/Seoul'))
+    </insert>
+
+    <update id="deleteBoard">
+        UPDATE board
+        set status = 1 , delete_time = convert_tz(now(), 'UTC', 'Asia/Seoul')
+        where write_id = #{writeId}
+    </update>
+
+    <update id="deleteComment">
+        UPDATE comment
+        set status = 1 , delete_time = convert_tz(now(), 'UTC', 'Asia/Seoul')
+        where comment_id = #{commentId}
+    </update>
+</mapper>

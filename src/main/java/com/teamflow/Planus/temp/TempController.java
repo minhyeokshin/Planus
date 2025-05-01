@@ -34,8 +34,8 @@ public class TempController {
     @GetMapping("/api/boardwrite")
     public String board3() { return "user/pages/api/boardwrite"; }
 
-    @GetMapping("/board/board")
-    public String board() { return "user/pages/board/board"; }
+//    @GetMapping("/board/board")
+//    public String board() { return "user/pages/board/board"; }
 
     @GetMapping("/api/boardRead")
     public String boardRead() { return "user/pages/api/boardRead"; }
