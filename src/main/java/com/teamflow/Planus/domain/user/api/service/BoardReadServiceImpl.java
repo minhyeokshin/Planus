@@ -2,6 +2,7 @@ package com.teamflow.Planus.domain.user.api.service;
 
 import com.teamflow.Planus.cache.BoardCache;
 import com.teamflow.Planus.cache.CommentCache;
+import com.teamflow.Planus.cache.LoginCache;
 import com.teamflow.Planus.domain.user.api.mapper.BoardReadMapper;
 import com.teamflow.Planus.domain.user.board.mapper.BoardMapper;
 import com.teamflow.Planus.dto.BoardDTO;
@@ -87,8 +88,8 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public int writeComment(String content, Long boardId) {
-        String userId = "user-1";
-        String userName = "신민혁";
+        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        String userName = LoginCache.getInstance().getLoginStatus().getUsername();
         log.info("BoardReadServiceImpl");
         log.info("userId: {}", userId);
         log.info("content: {}", content);

@@ -4,6 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.teamflow.Planus.domain.auth.login.repository.LoginMapper">
-    <!-- Define SQL statements here -->
-    <!-- (여기에 SQL 정의 작성) -->
+    <select id="login" resultType="com.teamflow.Planus.vo.UserVO">
+        SELECT
+            user_id AS userId,
+            username AS username,
+            email AS email,
+            phone AS phone,
+            login_id as loginId,
+            password as password,
+            role AS role
+            FROM user
+        WHERE login_id = #{userId}
+    </select>
 </mapper>
