@@ -24,13 +24,13 @@
             comment_id AS commentId,
             comment.user_id AS userId,
             user.username AS userName,
-            board_id AS writeId,
+            board_id AS BoardId,
             content AS content,
             created_at AS createdAt
             FROM comment
             LEFT JOIN user
             on comment.user_id = user.user_id
-        WHERE board_id = #{writeId} and status = 0
+        WHERE status = 0
         ORDER BY comment_id desc;
     </select>
 

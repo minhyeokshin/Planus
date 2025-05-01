@@ -16,7 +16,7 @@
         FROM board
         LEFT JOIN user
         on board.user_id = user.user_id
-        WHERE board_id = #{boardId} and status = 0
+        WHERE status = 0
         ORDER BY write_id desc ;
     </select>
 </mapper>

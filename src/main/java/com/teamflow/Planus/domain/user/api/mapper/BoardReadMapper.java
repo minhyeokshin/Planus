@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface BoardReadMapper {
     BoardVO findById(int writeId);
-    List<CommentVO> getComment(int writeId);
+    List<CommentVO> getComment();
     int writeComment(String content, Long boardId, String userId);
     int deleteBoard(int writeId);
     int deleteComment(int commentId);

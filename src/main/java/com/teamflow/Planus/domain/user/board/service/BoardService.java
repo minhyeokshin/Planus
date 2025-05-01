@@ -5,5 +5,5 @@ import com.teamflow.Planus.dto.BoardDTO;
 import java.util.List;
 
 public interface BoardService {
-    List<BoardDTO> getBoardList(int boardId);
+    List<BoardDTO> getBoardList(String boardId);
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface BoardMapper {
-    List<BoardVO> getBoardList(int boardId);
+    List<BoardVO> getBoardList();
 }
