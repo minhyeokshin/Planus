@@ -62,9 +62,9 @@ CREATE TABLE comment (
     FOREIGN KEY (board_id) REFERENCES board(write_id)
 );
 
-DROP TABLE IF EXISTS calender;
+DROP TABLE IF EXISTS calendar;
 
-CREATE TABLE calender (
+CREATE TABLE calendar (
     calendar_id VARCHAR(255) PRIMARY KEY COMMENT '일정 고유 식별자',
     title VARCHAR(255) COMMENT '일정 제목',
     content LONGTEXT COMMENT '일정 상세 내용 (HTML 포함 가능)',
@@ -82,3 +82,5 @@ ALTER TABLE comment ADD COLUMN status TINYINT DEFAULT 0;
 -- 0: 정상, 1: 삭제
 ALTER TABLE board ADD COLUMN delete_time DATETIME null;
 ALTER TABLE comment ADD COLUMN delete_time DATETIME null;
+
+ALTER TABLE calendar ADD COLUMN view_status TINYINT DEFAULT 0;
