@@ -34,9 +34,20 @@ public class BoardWriteServiceImpl implements BoardWriteService {
             BoardCache.getInstance().setBoardVOList(boardVOList);
         }
         log.info("boardVOList: {}", boardVOList);
-        int size = boardVOList.size() - 1;
+
+        int size = 0;
+        int writeId = 1;
+
+        if(!boardVOList.isEmpty()){
+            size = boardVOList.size() - 1;
+            log.info("size: {}", size);
+            writeId = boardVOList.get(0).getWriteId() + 1;
+            log.info("getWriteID : {}",boardVOList.get(size-1).getWriteId());
+        }
+
+
         BoardVO boardVO = BoardVO.builder()
-                .writeId(boardVOList.get(size).getWriteId() + 1)
+                .writeId(writeId)
                 .boardId(String.valueOf(boardId))
                 .userId(userId)
                 .userName(userName)
@@ -45,9 +56,11 @@ public class BoardWriteServiceImpl implements BoardWriteService {
                 .content(content)
                 .status(0)
                 .build();
+        log.info("boardVO: {}", boardVO);
         boardVOList.add(boardVO);
         BoardCache.getInstance().setBoardVOList(boardVOList);
-        int result = boardWriteMapper.write(title, content, boardId,userId);
+        LocalDateTime now = LocalDateTime.now();
+        int result = boardWriteMapper.write(title, content, boardId,userId,now);
         return result;
     }
 }

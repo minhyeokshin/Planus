@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDTO {
-    private String writeId;
+    private int writeId;
     private String boardId;
     private String userId;
     private String userName;
