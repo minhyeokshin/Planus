@@ -5,6 +5,7 @@ import com.teamflow.Planus.domain.user.calendar.Mapper.CalendarMapper;
 import com.teamflow.Planus.dto.CalendarDTO;
 import com.teamflow.Planus.vo.CalendarVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CalendarServiceImpl implements CalendarService {
 
     private final CalendarMapper calendarMapper;
@@ -70,13 +72,16 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public int deleteCalendar(String calendarId) {
-        int result = calendarMapper.delete(calendarId);
+        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        int result = calendarMapper.delete(calendarId,userId);
         return result;
     }
 
     @Override
     public int updateCalendar(String calendarId, int status) {
-        int result = calendarMapper.update(calendarId, status);
+        String userID = LoginCache.getInstance().getLoginStatus().getUserId();
+        log.info("userID: {}", userID);
+        int result = calendarMapper.update(calendarId, status,userID);
         return result;
     }
 }

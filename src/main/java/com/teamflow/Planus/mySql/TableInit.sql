@@ -84,3 +84,5 @@ ALTER TABLE board ADD COLUMN delete_time DATETIME null;
 ALTER TABLE comment ADD COLUMN delete_time DATETIME null;
 
 ALTER TABLE calendar ADD COLUMN view_status TINYINT DEFAULT 0;
+
+ALTER TABLE boardViewLog ADD UNIQUE (user_id, write_id);

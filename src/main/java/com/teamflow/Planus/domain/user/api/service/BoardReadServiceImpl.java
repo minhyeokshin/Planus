@@ -6,8 +6,10 @@ import com.teamflow.Planus.cache.LoginCache;
 import com.teamflow.Planus.domain.user.api.mapper.BoardReadMapper;
 import com.teamflow.Planus.domain.user.board.mapper.BoardMapper;
 import com.teamflow.Planus.dto.BoardDTO;
+import com.teamflow.Planus.dto.BoardViewLogDTO;
 import com.teamflow.Planus.dto.CommentDTO;
 import com.teamflow.Planus.vo.BoardVO;
+import com.teamflow.Planus.vo.BoardViewLogVO;
 import com.teamflow.Planus.vo.CommentVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -127,28 +130,68 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public int deleteBoard(int writeId) {
+        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
         log.info("boardDelete(writeId) : {}", writeId);
         List<BoardVO> boardVOList = BoardCache.getInstance().getBoardVOList();
         if (boardVOList == null){
             boardVOList = boardMapper.getBoardList();
         }
-        boardVOList.removeIf(vo -> vo.getWriteId() == writeId );
-        BoardCache.getInstance().setBoardVOList(boardVOList);
         LocalDateTime now = LocalDateTime.now();
-        return boardReadMapper.deleteBoard(writeId,now);
+        int result = boardReadMapper.deleteBoard(writeId,now,userId);
+        if (result > 0){
+            boardVOList.removeIf(vo -> vo.getWriteId() == writeId );
+            BoardCache.getInstance().setBoardVOList(boardVOList);
+        }
+        return result;
     }
 
     @Override
     public int deleteComment(int commentId) {
+        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
         log.info("commentDelete(commentId) : {}", commentId);
         List<CommentVO> commentVOList = CommentCache.getInstance().getcommentVOList();
         if (commentVOList == null){
             commentVOList = boardReadMapper.getComment();
         }
-        commentVOList.removeIf(vo -> vo.getCommentId() == commentId);
-        CommentCache.getInstance().setCommentVOList(commentVOList);
-        log.info("댓글 캐시 삭제완료 commentVOList: {}", commentVOList);
+
         LocalDateTime now = LocalDateTime.now();
-        return boardReadMapper.deleteComment(commentId,now);
+        int result = boardReadMapper.deleteComment(commentId,now,userId);
+        if (result > 0){
+            commentVOList.removeIf(vo -> vo.getCommentId() == commentId);
+            CommentCache.getInstance().setCommentVOList(commentVOList);
+            log.info("댓글 캐시 삭제완료 commentVOList: {}", commentVOList);
+        }
+        return result;
+    }
+
+    @Override
+    public int viewLog(int writeId) {
+        String viewId = UUID.randomUUID().toString();
+        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        LocalDateTime now = LocalDateTime.now();
+        int result = boardReadMapper.viewLog(viewId, writeId, userId, now);
+        return result;
+    }
+
+    @Override
+    public List<BoardViewLogDTO> getViewLog(int writeId) {
+        List<BoardViewLogDTO> boardViewLogDTOList = new ArrayList<>();
+        List<BoardViewLogVO> boardViewLogVOList = boardReadMapper.getViewLog();
+        for (BoardViewLogVO boardViewLogVO : boardViewLogVOList) {
+            BoardViewLogDTO boardViewLogDTO = BoardViewLogDTO.builder()
+                    .userId(boardViewLogVO.getUserId())
+                    .userName(boardViewLogVO.getUserName())
+                    .viewLogId(boardViewLogVO.getViewLogId())
+                    .viewTime(boardViewLogVO.getViewTime())
+                    .writeId(boardViewLogVO.getWriteId())
+                    .build();
+            boardViewLogDTOList.add(boardViewLogDTO);
+        }
+
+        boardViewLogDTOList =
+                boardViewLogDTOList.stream()
+                        .filter(dto -> dto.getWriteId() == writeId)
+                        .toList();
+        return boardViewLogDTOList;
     }
 }

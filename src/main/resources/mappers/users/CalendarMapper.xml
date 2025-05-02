@@ -28,18 +28,20 @@
             (#{calendarId},#{title},#{content},#{userId},#{startDate},#{endDate})
     </insert>
 
-    <delete id="delete">
+    <update id="delete">
         UPDATE calendar
         SET
             view_status = 1
-        WHERE calendar_id = #{calendarId}
-    </delete>
+        WHERE calendar_id = #{calendarId} AND
+              user_id = #{userId}
+    </update>
     
     <update id="update">
         UPDATE calendar
         SET
             status = #{status}
-        WHERE calendar_id = #{calendarId}
+        WHERE calendar_id = #{calendarId} AND
+              user_id = #{userId}
     </update>
 
 </mapper>

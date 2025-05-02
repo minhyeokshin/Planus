@@ -44,12 +44,33 @@
     <update id="deleteBoard">
         UPDATE board
         set status = 1 , delete_time = #{now}
-        where write_id = #{writeId}
+        where write_id = #{writeId} and
+              user_id = #{userId}
     </update>
 
     <update id="deleteComment">
         UPDATE comment
         set status = 1 , delete_time = #{now}
-        where comment_id = #{commentId}
+        where comment_id = #{commentId} and
+              user_id = #{userId}
     </update>
+    
+    <insert id="viewLog">
+        INSERT IGNORE INTO boardViewLog
+        (view_log, user_id, write_id, view_time)
+            VALUES
+                (#{viewId},#{userId},#{writeId},#{now})
+    </insert>
+    
+    <select id="getViewLog" resultType="com.teamflow.Planus.vo.BoardViewLogVO">
+        SELECT
+            view_log AS viewLogId,
+            boardViewLog.user_id AS userId,
+            user.username AS userName,
+            write_id AS writeId,
+            view_time AS viewTime
+        FROM boardViewLog
+        LEFT JOIN user
+        ON boardViewLog.user_id = user.user_id;
+    </select>
 </mapper>
