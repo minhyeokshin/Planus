@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user/pages")
 public class TempController {
 
-    @GetMapping("/index")
-    public String adminIndex() {
-        return "user/pages/index";
-    }
+//    @GetMapping("/index")
+//    public String adminIndex() {
+//        return "user/pages/index";
+//    }
 
     @GetMapping("/convention/commit")
     public String commit() { return "user/pages/convention/commit"; }
@@ -22,8 +22,8 @@ public class TempController {
     @GetMapping("/convention/issue")
     public String issue() { return "user/pages/convention/issue"; }
 
-    @GetMapping("/calendar/calendar")
-    public String calendar() { return "user/pages/calendar/calendar"; }
+//    @GetMapping("/calendar/calendar")
+//    public String calendar() { return "user/pages/calendar/calendar"; }
 
     @GetMapping("/board/commitList")
     public String board1() { return "user/pages/board/commitList"; }

@@ -248,5 +248,11 @@
 <footer>
     2025 WareFlow Co. All rights reserved ©
 </footer>
+
+<script th:if="${msg != null}">
+    alert('[[${msg}]]');
+    console.log('[[${msg}]]');
+</script>
+
 </body>
 </html>
