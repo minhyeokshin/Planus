@@ -8,19 +8,169 @@
 <!-- (기본 관리자 레이아웃 상속) -->
 <head>
     <style>
-        .board-content img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 10px 0;}
-        </style>
+      /* CSS Reset */
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed,
+      figure, figcaption, footer, header, hgroup,
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+        box-sizing: border-box;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure,
+      footer, header, hgroup, menu, nav, section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+      ol, ul {
+        list-style: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      /* Layout Container */
+      .board-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+      }
+
+      article {
+        margin-top: 40px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #ddd;
+      }
+      article h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #222;
+      }
+      .board-content {
+        font-size: 16px;
+        line-height: 1.7;
+        color: #444;
+        margin-bottom: 30px;
+      }
+      .board-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 10px 0;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+      textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        resize: vertical;
+      }
+
+      button {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .back-button {
+        margin-top: 30px;
+        background-color: #eee;
+        color: #333;
+        border: 1px solid #ccc;
+      }
+      .back-button:hover {
+        background-color: #ddd;
+      }
+      .delete-button {
+        background-color: crimson;
+      }
+      .delete-button:hover {
+        background-color: #b30027;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        border-left: 4px solid #3498db;
+        padding-left: 10px;
+      }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+      table th, table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      table thead {
+        background-color: #f1f1f1;
+      }
+
+      /* Comment Styles */
+      .comment-box {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+      .comment {
+        margin-bottom: 20px;
+      }
+      .comment strong {
+        font-weight: 600;
+      }
+      .comment-time {
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
 </head>
 <body>
 
 <div layout:fragment="content">
     <!-- Main content area to be injected into layout -->
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
-    <div>
+    <div class="board-container">
 
         <article style="margin-top: 40px; padding-bottom: 30px; border-bottom: 1px solid #ddd;">
           <h1 style="font-size: 26px; font-weight: 600; margin-bottom: 10px;" th:text="${board.title}">게시글 제목</h1>
@@ -80,8 +230,26 @@
           </div>
         </section>
 
+        <section style="margin-top: 50px;">
+          <h2 style="font-size: 22px; margin-bottom: 15px; color: #2c3e50; border-left: 4px solid #3498db; padding-left: 10px;">👁️‍🗨️ 최근 조회 기록</h2>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc; font-size: 14px;">
+            <thead style="background-color: #ecf0f1;">
+              <tr>
+                <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">조회자</th>
+                <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">조회 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="log : ${boardViewLogDTOList}">
+                <td style="padding: 10px; border: 1px solid #ddd; color: #34495e;" th:text="${log.userName}">user</td>
+                <td style="padding: 10px; border: 1px solid #ddd; color: #7f8c8d;" th:text="${#temporals.format(log.viewTime, 'yyyy-MM-dd HH:mm:ss')}">time</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
         <div style="margin-top: 30px;">
-          <button onclick="history.back()" style="padding: 8px 16px; font-size: 14px; background-color: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+          <button onclick="history.back()" style="padding: 10px 18px; font-size: 16px; font-weight: 600; background-color: #e0e0e0; color: #222; border: 1px solid #bbb; border-radius: 4px; cursor: pointer;">
             ← 목록으로
           </button>
         </div>

@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface CalendarMapper {
     int write(CalendarVO calendarVO);
-    int delete(String calendarId);
-    int update(String calendarId,int status);
+    int delete(String calendarId,String userId);
+    int update(String calendarId,int status,String userId);
     List<CalendarDTO> getCalendarList();
 }

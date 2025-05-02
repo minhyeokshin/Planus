@@ -93,6 +93,7 @@
       </div>
     </div>
     <script>
+      const msg = document.getElementById('flash-msg')?.dataset.msg;
       // Global variable to store selected calendarId
       let selectedCalendarId = null;
       // Global variable to store the selected date string for event creation
@@ -151,11 +152,12 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ calendarId: selectedCalendarId ,status : 1})
-        }).then(() => {
-          alert('✅ 완료 처리되었습니다');
-          document.getElementById('eventModal').style.display = 'none';
-          window.location.href = '/user/pages/calendar/calendar';
-        });
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
       }
 
       function markIncomplete() {
@@ -163,11 +165,12 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ calendarId: selectedCalendarId ,status : 0})
-        }).then(() => {
-          alert('❌ 미완료 처리되었습니다');
-          document.getElementById('eventModal').style.display = 'none';
-          window.location.href = '/user/pages/calendar/calendar';
-        });
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
       }
 
       function deleteEvent() {
@@ -175,11 +178,12 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ calendarId: selectedCalendarId })
-        }).then(() => {
-          alert('🗑 삭제 처리되었습니다');
-          document.getElementById('eventModal').style.display = 'none';
-          window.location.href = '/user/pages/calendar/calendar';
-        });
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
       }
 
       // Function to submit a new event from the modal
@@ -241,6 +245,8 @@
     <button onclick="deleteEvent()">🗑 삭제</button>
   </div>
 </div>
+
+  <div id="flash-msg" th:data-msg='${msg}'></div>
 
 <div id="createEventModal" class="modal">
   <h3>새 일정 등록</h3>

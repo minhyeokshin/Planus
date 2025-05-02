@@ -43,30 +43,47 @@ public class CalendarController {
 
     @PostMapping("/api/success")
     @ResponseBody
-    public void success(@RequestBody Map<String, Object> map) {
+    public String success(@RequestBody Map<String, Object> map) {
         String calendarId = (String) map.get("calendarId");
         int status = (int) map.get("status");
-        calendarService.updateCalendar(calendarId, status);
+        int result = calendarService.updateCalendar(calendarId, status);
         log.info("완료 calendarId: {}", calendarId);
         log.info("완료 status: {}", status);
+        String msg = "✅ 완료 처리되었습니다";
+        if (result == 0) {
+            msg = "요청이 실패하였습니다.";
+        }
+        log.info(msg);
+        return msg;
     }
 
     @PostMapping("/api/fail")
     @ResponseBody
-    public void fail(@RequestBody Map<String, Object> map) {
+    public String fail(@RequestBody Map<String, Object> map) {
         String calendarId = (String) map.get("calendarId");
         int status = (int) map.get("status");
-        calendarService.updateCalendar(calendarId, status);
+        int result = calendarService.updateCalendar(calendarId, status);
         log.info("미완료 calendarId: {}", calendarId);
         log.info("미완료 status: {}", status);
+        String msg = "✅ 완료 처리되었습니다";
+        if (result == 0) {
+            msg = "요청이 실패하였습니다.";
+        }
+        log.info(msg);
+        return msg;
     }
 
     @PostMapping("/api/delete")
     @ResponseBody
     public String delete(@RequestBody Map<String, Object> map) {
         String calendarId = (String) map.get("calendarId");
-        calendarService.deleteCalendar(calendarId);
-        return "redirect:/user/pages/calendar/calendar";
+        int result = calendarService.deleteCalendar(calendarId);
+        String msg = "✅ 완료 처리되었습니다";
+        if (result == 0) {
+            msg = "요청이 실패하였습니다.";
+        }
+        log.info(msg);
+        return msg;
     }
 
 
