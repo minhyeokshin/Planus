@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class BoardReadServiceImpl implements BoardReadService {
 
         boardVOList =
                 boardVOList.stream()
-                        .filter(vo ->vo.getWriteId().equals(String.valueOf(writeId)))
+                        .filter(vo ->vo.getWriteId() == writeId)
                         .toList();
 
         BoardVO boardVO = boardVOList.get(0);
@@ -95,14 +95,24 @@ public class BoardReadServiceImpl implements BoardReadService {
         log.info("content: {}", content);
         log.info("boardId: {}", boardId);
         List<CommentVO> commentVOList = CommentCache.getInstance().getcommentVOList();
-        int size = commentVOList.size() - 1;
+        int size = 0;
+        int commentId = 1;
+
+        if(!commentVOList.isEmpty()){
+            size = commentVOList.size() - 1;
+        }
+
+        if(!commentVOList.isEmpty()){
+            commentId = commentVOList.get(size).getCommentId() + 1;
+        }
+
         CommentVO commentVO = CommentVO.builder()
-                .commentId(commentVOList.get(size).getCommentId()+1)
+                .commentId(commentId)
                 .userId(userId)
                 .userName(userName)
                 .boardId(Math.toIntExact(boardId))
                 .content(content)
-                .createdAt(LocalDate.now().atStartOfDay())
+                .createdAt(LocalDateTime.now())
                 .status(0)
                 .build();
         log.info("추가 이전 commentVOList : {}", commentVOList.size());
@@ -110,8 +120,9 @@ public class BoardReadServiceImpl implements BoardReadService {
         log.info("댓글 추가 완료");
         log.info("commentVOList: {}", commentVOList.size());
         CommentCache.getInstance().setCommentVOList(commentVOList);
+        LocalDateTime now = LocalDateTime.now();
 
-        return boardReadMapper.writeComment(content, boardId, userId);
+        return boardReadMapper.writeComment(content, boardId, userId,now);
     }
 
     @Override
@@ -121,9 +132,10 @@ public class BoardReadServiceImpl implements BoardReadService {
         if (boardVOList == null){
             boardVOList = boardMapper.getBoardList();
         }
-        boardVOList.removeIf(vo -> vo.getWriteId().equals(String.valueOf(writeId)));
+        boardVOList.removeIf(vo -> vo.getWriteId() == writeId );
         BoardCache.getInstance().setBoardVOList(boardVOList);
-        return boardReadMapper.deleteBoard(writeId);
+        LocalDateTime now = LocalDateTime.now();
+        return boardReadMapper.deleteBoard(writeId,now);
     }
 
     @Override
@@ -136,6 +148,7 @@ public class BoardReadServiceImpl implements BoardReadService {
         commentVOList.removeIf(vo -> vo.getCommentId() == commentId);
         CommentCache.getInstance().setCommentVOList(commentVOList);
         log.info("댓글 캐시 삭제완료 commentVOList: {}", commentVOList);
-        return boardReadMapper.deleteComment(commentId);
+        LocalDateTime now = LocalDateTime.now();
+        return boardReadMapper.deleteComment(commentId,now);
     }
 }

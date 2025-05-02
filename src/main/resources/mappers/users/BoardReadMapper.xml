@@ -38,18 +38,18 @@
         insert into comment
         (user_id, board_id, content, created_at)
         values
-            (#{userId},#{boardId},#{content},convert_tz(now(), 'UTC', 'Asia/Seoul'))
+            (#{userId},#{boardId},#{content},#{now})
     </insert>
 
     <update id="deleteBoard">
         UPDATE board
-        set status = 1 , delete_time = convert_tz(now(), 'UTC', 'Asia/Seoul')
+        set status = 1 , delete_time = #{now}
         where write_id = #{writeId}
     </update>
 
     <update id="deleteComment">
         UPDATE comment
-        set status = 1 , delete_time = convert_tz(now(), 'UTC', 'Asia/Seoul')
+        set status = 1 , delete_time = #{now}
         where comment_id = #{commentId}
     </update>
 </mapper>

@@ -7,6 +7,6 @@
     
     <insert id="write">
         INSERT INTO board (board_id, user_id, created_at, title, content) values
-                              (#{boardId},#{userId},convert_tz(now(), 'UTC', 'Asia/Seoul'),#{title},#{content})
+                              (#{boardId},#{userId},#{now},#{title},#{content})
     </insert>
 </mapper>
