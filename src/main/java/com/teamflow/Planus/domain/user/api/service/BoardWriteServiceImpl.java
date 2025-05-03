@@ -4,7 +4,10 @@ import com.teamflow.Planus.cache.BoardCache;
 import com.teamflow.Planus.cache.LoginCache;
 import com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper;
 import com.teamflow.Planus.domain.user.board.mapper.BoardMapper;
+import com.teamflow.Planus.dto.PostDTO;
+import com.teamflow.Planus.util.MailService;
 import com.teamflow.Planus.vo.BoardVO;
+import com.teamflow.Planus.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class BoardWriteServiceImpl implements BoardWriteService {
 
     private final BoardWriteMapper boardWriteMapper;
     private final BoardMapper boardMapper;
+    private final MailService mailService;
 
     @Override
     public int write(String title, String content, Long boardId) {
@@ -61,6 +65,23 @@ public class BoardWriteServiceImpl implements BoardWriteService {
         BoardCache.getInstance().setBoardVOList(boardVOList);
         LocalDateTime now = LocalDateTime.now();
         int result = boardWriteMapper.write(title, content, boardId,userId,now);
+        List<UserVO> userEmailList = boardWriteMapper.getuserEmailList();
+        String to;
+        if (result > 0){
+            for (UserVO email : userEmailList) {
+                to = email.getEmail();
+                PostDTO postDTO = PostDTO.builder()
+                        .title(title)
+                        .content(content)
+                        .createdAt(now)
+                        .author(userName)
+                        .writeId(writeId)
+                        .build();
+                mailService.sendPostNotification(to, postDTO);
+            }
+        }
+
+
         return result;
     }
 }

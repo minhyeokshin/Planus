@@ -73,4 +73,5 @@
         LEFT JOIN user
         ON boardViewLog.user_id = user.user_id;
     </select>
+
 </mapper>

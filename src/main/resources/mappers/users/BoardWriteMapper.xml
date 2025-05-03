@@ -9,4 +9,10 @@
         INSERT INTO board (board_id, user_id, created_at, title, content) values
                               (#{boardId},#{userId},#{now},#{title},#{content})
     </insert>
+
+    <select id="getuserEmailList" resultType="com.teamflow.Planus.vo.UserVO">
+        SELECT email,
+               role
+        FROM user
+    </select>
 </mapper>

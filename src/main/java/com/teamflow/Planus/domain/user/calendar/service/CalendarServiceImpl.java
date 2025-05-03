@@ -1,9 +1,13 @@
 package com.teamflow.Planus.domain.user.calendar.service;
 
 import com.teamflow.Planus.cache.LoginCache;
+import com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper;
 import com.teamflow.Planus.domain.user.calendar.Mapper.CalendarMapper;
 import com.teamflow.Planus.dto.CalendarDTO;
+import com.teamflow.Planus.dto.PostDTO;
+import com.teamflow.Planus.util.MailService;
 import com.teamflow.Planus.vo.CalendarVO;
+import com.teamflow.Planus.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,8 @@ import java.util.*;
 public class CalendarServiceImpl implements CalendarService {
 
     private final CalendarMapper calendarMapper;
+    private final MailService mailService;
+    private final BoardWriteMapper boardWriteMapper;
 
     @Override
     public List<Map<String,Object>> getCalendarList() {
@@ -67,6 +73,26 @@ public class CalendarServiceImpl implements CalendarService {
                 .endDate(endDate)
                 .build();
         int result = calendarMapper.write(calendarVO);
+
+        List<UserVO> userEmailList = boardWriteMapper.getuserEmailList();
+        userEmailList =
+                userEmailList.stream()
+                        .filter(vo -> vo.getRole().equals("ADMIN"))
+                        .toList();
+
+        String to;
+        if (result > 0) {
+            for (UserVO email : userEmailList) {
+                to = email.getEmail();
+                PostDTO postDTO = PostDTO.builder()
+                        .title(title)
+                        .content(content)
+                        .createdAt(LocalDateTime.now())
+                        .author(userId).build();
+                mailService.sendPostNotification(to,postDTO);
+            }
+        }
+
         return result;
     }
 
