@@ -5,6 +5,7 @@ import com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper;
 import com.teamflow.Planus.domain.user.calendar.Mapper.CalendarMapper;
 import com.teamflow.Planus.dto.CalendarDTO;
 import com.teamflow.Planus.dto.PostDTO;
+import com.teamflow.Planus.util.ColorMappingService;
 import com.teamflow.Planus.util.MailService;
 import com.teamflow.Planus.vo.CalendarVO;
 import com.teamflow.Planus.vo.UserVO;
@@ -23,11 +24,13 @@ public class CalendarServiceImpl implements CalendarService {
     private final CalendarMapper calendarMapper;
     private final MailService mailService;
     private final BoardWriteMapper boardWriteMapper;
+    private final ColorMappingService colorMappingService;
 
     @Override
     public List<Map<String,Object>> getCalendarList() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<CalendarDTO> calendarDTOList = calendarMapper.getCalendarList();
+
 
         for (CalendarDTO calendarDTO : calendarDTOList) {
             Map<String, Object> map = new HashMap<>();
@@ -39,6 +42,7 @@ public class CalendarServiceImpl implements CalendarService {
             map.put("status", calendarDTO.getStatus());
             map.put("content", calendarDTO.getContent());
             map.put("userName", calendarDTO.getUserName());
+            map.put("color", colorMappingService.assignColor(calendarDTO.getUserId()));
             map.put("allDay", false);
             result.add(map);
         }
@@ -110,4 +114,6 @@ public class CalendarServiceImpl implements CalendarService {
         int result = calendarMapper.update(calendarId, status,userID);
         return result;
     }
+
+
 }
