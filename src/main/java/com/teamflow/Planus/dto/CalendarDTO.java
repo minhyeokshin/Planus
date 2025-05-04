@@ -17,6 +17,7 @@ public class CalendarDTO {
     private String content;
     private String userId;
     private String userName;
+    private String color;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private int status;
