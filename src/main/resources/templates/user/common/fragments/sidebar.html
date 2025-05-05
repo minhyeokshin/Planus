@@ -59,24 +59,11 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-1}">
+                <li th:each="menu : ${menuList}" class="sidebar-item">
+                    <a class="sidebar-link d-flex align-items-center"
+                       th:href="@{'/user/group/' + ${groupId} + ${menu.menuPath}}">
                         <i class="align-middle" data-feather="square"></i>
-                        <span class="align-middle">공지사항</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item">
-                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-2}">
-                        <i class="align-middle" data-feather="square"></i>
-                        <span class="align-middle">회의록</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item">
-                    <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/board/board-3}">
-                        <i class="align-middle" data-feather="square"></i>
-                        <span class="align-middle">자유게시판</span>
+                        <span class="align-middle" th:text="${menu.menuName}"></span>
                     </a>
                 </li>
 
