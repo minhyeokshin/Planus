@@ -1,0 +1,213 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head>
+  <style>
+    .menu-container {
+        display: flex;
+        gap: 24px;
+    }
+    .menu-left, .menu-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .menu-block {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .menu-block form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .menu-block input {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .menu-block button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .menu-block button:hover {
+        background-color: #218838;
+    }
+    .menu-rename-form {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f3f3f3;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .menu-rename-form input {
+        border: 1px solid #ccc;
+        padding: 6px 12px;
+        border-radius: 4px;
+        flex: 1;
+    }
+    .menu-rename-form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .menu-rename-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Improved menu list item styles */
+    .menu-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        background-color: #fefefe;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .menu-list-item span {
+        font-size: 15px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .menu-list-item form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+
+    .menu-list-item button {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .menu-list-item button:hover {
+        background-color: #218838;
+    }
+
+    .menu-order-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .menu-order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fefefe;
+        padding: 10px 14px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .menu-order-item span {
+        font-size: 15px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .menu-order-item input {
+        width: 100px;
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div class="menu-container">
+      <div class="menu-left">
+        <!-- 메뉴 등록 -->
+        <div class="menu-block">
+            <form th:action="@{/menu-insert}" method="post">
+                <input th:type="text" placeholder="메뉴 이름을 입력하세요." th:name="menuName"></input>
+                <input th:type="text" placeholder="메뉴 설명을 입력하세요" th:name="description"></input>
+                <button type="submit">메뉴 등록</button>
+            </form>
+        </div>
+        <!-- 메뉴 이름 변경 -->
+        <div class="menu-block">
+            <div th:each="menu : ${menuList}" class="menu-list-item">
+                <th:block>
+                    <div class="menu-rename-form">
+                        <form th:action="@{/menu-rename}" method="post">
+                            <input type="hidden" name="menuId" th:value="${menu.boardId}" />
+                            <input type="text" name="menuName" th:value="${menu.menuName}"></input>
+                            <button type="submit">메뉴 이름 변경</button>
+                        </form>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+      </div>
+      <div class="menu-right">
+        <!-- 메뉴 삭제 -->
+        <div class="menu-block">
+            <div th:each="menu : ${menuList}" class="menu-list-item">
+                <th:block>
+                    <form th:action="@{/menu-delete}" method="post">
+                        <span th:text="${menu.menuName}"></span>
+                        <input type="hidden" name="menuName" th:value="${menu.menuName}" />
+                        <button type="submit">삭제</button>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+
+<!--        &lt;!&ndash; 메뉴 순서 수정 &ndash;&gt;-->
+<!--          <div class="menu-block">-->
+<!--              <form>-->
+<!--                  <div class="menu-order-list">-->
+<!--                      <div th:each="menu : ${menuList}" class="menu-order-item">-->
+<!--                          <span th:text="${menu.menuName}"></span>-->
+<!--                          <input name="menuOrder" placeholder="순서를 입력하세요." />-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--                  <button type="submit">수정</button>-->
+<!--              </form>-->
+<!--          </div>-->
+
+      </div>
+    </div>
+</div>
+
+
+</body>
+</html>

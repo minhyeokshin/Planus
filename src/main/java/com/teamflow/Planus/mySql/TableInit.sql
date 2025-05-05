@@ -117,3 +117,5 @@ CREATE TABLE board_menu (
                         description TEXT
                         # 게시판에 대한 설명. 예: “팀 전체 공지사항을 올리는 공간입니다.”
 );
+
+ALTER TABLE board_menu ADD column status tinyint default 0;

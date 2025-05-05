@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.common.mapper.MenuMapper">
+    <insert id="insertMenuList" parameterType="com.teamflow.Planus.dto.MenuDTO">
+        insert into board_menu
+        (group_id, board_name, board_path, sort_order, description)
+            VALUES(
+                #{groupId},
+                #{menuName},
+                concat(
+                  'board-',
+                  (
+                    SELECT max_id + 1
+                    FROM (
+                      SELECT COALESCE(MAX(id), 0) AS max_id
+                      FROM board_menu
+                    ) AS tmp_max
+                  )
+                ),
+                (
+                  SELECT cnt + 1
+                  FROM (
+                    SELECT COUNT(id) AS cnt
+                    FROM board_menu
+                    WHERE group_id = #{groupId}
+                  ) AS tmp_cnt
+                ),
+                #{description}
+            )
+    </insert>
+    
+    <select id="getMenuList" resultType="com.teamflow.Planus.dto.MenuDTO">
+       SELECT board_name AS menuName,
+              board_path AS menuPath,
+              id AS boardId
+           FROM board_menu
+       WHERE group_id = #{groupId}
+       AND status = 0;
+    </select>
+    
+    <update id="deleteMenu">
+        UPDATE board_menu
+        SET status = 1
+        WHERE board_name = #{menuName}
+        AND group_id = #{groupId}
+    </update>
+
+    <update id="updateMenu">
+        UPDATE board_menu
+        SET board_name = #{menuName}
+        WHERE id = #{menuId}
+          AND group_id = #{groupId}
+    </update>
+
+
+</mapper>
