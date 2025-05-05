@@ -40,4 +40,6 @@ public class TempController {
     @GetMapping("/api/boardRead")
     public String boardRead() { return "user/pages/api/boardRead"; }
 
+    @GetMapping("/api/menuManagement")
+    public String menuManagement() { return "user/pages/api/menuManagement"; }
 }
