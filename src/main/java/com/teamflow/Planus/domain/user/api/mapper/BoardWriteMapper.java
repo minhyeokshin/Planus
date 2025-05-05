@@ -8,6 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface BoardWriteMapper {
-    int write(String title, String content, Long boardId, String userId, LocalDateTime now);
+    int write(String title, String content, Long boardId, String userId, LocalDateTime now,Long groupId);
     List<UserVO> getuserEmailList();
 }

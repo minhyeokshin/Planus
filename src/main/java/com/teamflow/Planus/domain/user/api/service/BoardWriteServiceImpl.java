@@ -1,7 +1,7 @@
 package com.teamflow.Planus.domain.user.api.service;
 
 import com.teamflow.Planus.cache.BoardCache;
-import com.teamflow.Planus.cache.LoginCache;
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper;
 import com.teamflow.Planus.domain.user.board.mapper.BoardMapper;
 import com.teamflow.Planus.dto.PostDTO;
@@ -10,10 +10,14 @@ import com.teamflow.Planus.vo.BoardVO;
 import com.teamflow.Planus.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -30,8 +34,9 @@ public class BoardWriteServiceImpl implements BoardWriteService {
         log.info("boardId: {}", boardId);
         log.info("title: {}", title);
         log.info("content: {}", content);
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
-        String userName = LoginCache.getInstance().getLoginStatus().getUsername();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
         List<BoardVO> boardVOList = BoardCache.getInstance().getBoardVOList();
         if (boardVOList == null){
             boardVOList = boardMapper.getBoardList();
@@ -40,31 +45,31 @@ public class BoardWriteServiceImpl implements BoardWriteService {
         log.info("boardVOList: {}", boardVOList);
 
         int size = 0;
-        int writeId = 1;
-
+        int nextWriteId = 1;
         if(!boardVOList.isEmpty()){
-            size = boardVOList.size() - 1;
-            log.info("size: {}", size);
-            writeId = boardVOList.get(0).getWriteId() + 1;
-            log.info("getWriteID : {}",boardVOList.get(size-1).getWriteId());
+            Optional<BoardVO> optionalBoardVO = boardVOList.stream()
+                    .max(Comparator.comparing(BoardVO::getWriteId));
+            nextWriteId = optionalBoardVO.get().getWriteId() +1;
         }
 
 
         BoardVO boardVO = BoardVO.builder()
-                .writeId(writeId)
+                .writeId(nextWriteId)
                 .boardId(String.valueOf(boardId))
-                .userId(userId)
-                .userName(userName)
+                .groupId(currentUser.getGroupId())
+                .userId(currentUser.getUserId())
+                .userName(currentUser.getName())
                 .createdAt(LocalDateTime.now())
                 .title(title)
                 .content(content)
                 .status(0)
                 .build();
+
         log.info("boardVO: {}", boardVO);
         boardVOList.add(boardVO);
         BoardCache.getInstance().setBoardVOList(boardVOList);
         LocalDateTime now = LocalDateTime.now();
-        int result = boardWriteMapper.write(title, content, boardId,userId,now);
+        int result = boardWriteMapper.write(title, content, boardId,currentUser.getUserId(),now,currentUser.getGroupId());
         List<UserVO> userEmailList = boardWriteMapper.getuserEmailList();
         String to;
         if (result > 0){
@@ -74,8 +79,8 @@ public class BoardWriteServiceImpl implements BoardWriteService {
                         .title(title)
                         .content(content)
                         .createdAt(now)
-                        .author(userName)
-                        .writeId(writeId)
+                        .author(currentUser.getUsername())
+                        .writeId(nextWriteId)
                         .build();
                 mailService.sendPostNotification(to, postDTO);
             }

@@ -29,15 +29,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
 
             log.info("🔍 user.getClientId() = {}", user.getUserId());
-            log.info("role : {}", user.getRole());
-            log.info("pwd : {}", user.getPassword());
             CustomUserDetails customUser = new CustomUserDetails();
             customUser.setId(user.getLoginId());
             customUser.setRole("ROLE_"+user.getRole());
             customUser.setPassword(user.getPassword());
-            customUser.setClientId(user.getUserId());
+            customUser.setUserId(user.getUserId());
+            customUser.setName(user.getUsername());
+            customUser.setGroupId(user.getGroupId());
+            log.info("customUser: {}", customUser);
             return customUser;
-
-
     }
 }

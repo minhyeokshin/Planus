@@ -1,6 +1,6 @@
 package com.teamflow.Planus.domain.user.calendar.service;
 
-import com.teamflow.Planus.cache.LoginCache;
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper;
 import com.teamflow.Planus.domain.user.calendar.Mapper.CalendarMapper;
 import com.teamflow.Planus.dto.CalendarDTO;
@@ -11,6 +11,8 @@ import com.teamflow.Planus.vo.CalendarVO;
 import com.teamflow.Planus.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,13 @@ public class CalendarServiceImpl implements CalendarService {
         List<Map<String, Object>> result = new ArrayList<>();
         List<CalendarDTO> calendarDTOList = calendarMapper.getCalendarList();
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
+        calendarDTOList =
+                calendarDTOList.stream()
+                        .filter(dto -> Objects.equals(dto.getGroupId(), currentUser.getGroupId()))
+                        .toList();
 
         for (CalendarDTO calendarDTO : calendarDTOList) {
             Map<String, Object> map = new HashMap<>();
@@ -54,8 +63,12 @@ public class CalendarServiceImpl implements CalendarService {
     public List<CalendarDTO> getTodayCalendarList() {
         List<CalendarDTO> calendarDTOList = calendarMapper.getCalendarList();
 
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
         calendarDTOList
                 = calendarDTOList.stream()
+                .filter(calendar -> Objects.equals(calendar.getGroupId(), currentUser.getGroupId()))
                 .filter(dto -> dto.getStartDate().isBefore(LocalDateTime.now()))
                 .filter(dto -> dto.getEndDate().isAfter(LocalDateTime.now()))
                 .toList();
@@ -66,17 +79,29 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public int writeCalendar(String title, String content, LocalDateTime startDate, LocalDateTime endDate) {
 
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+        log.info("currentUser: {}", currentUser);
+        log.info("title: {}", title);
+        log.info("content: {}", content);
+        log.info("startDate: {}", startDate);
+        log.info("endDate: {}", endDate);
+        log.info("일정등록 서비스 진입");
+        String userId = currentUser.getUserId();
 
         CalendarVO calendarVO = CalendarVO.builder()
                 .calendarId(UUID.randomUUID().toString())
                 .title(title)
                 .content(content)
+                .groupId(currentUser.getGroupId())
                 .userId(userId)
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();
+
+        log.info("calendarVO: {}", calendarVO);
         int result = calendarMapper.write(calendarVO);
+        log.info("result: {}", result);
 
         List<UserVO> userEmailList = boardWriteMapper.getuserEmailList();
         userEmailList =
@@ -102,16 +127,20 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public int deleteCalendar(String calendarId) {
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
+        String userId = currentUser.getUserId();
         int result = calendarMapper.delete(calendarId,userId);
         return result;
     }
 
     @Override
     public int updateCalendar(String calendarId, int status) {
-        String userID = LoginCache.getInstance().getLoginStatus().getUserId();
-        log.info("userID: {}", userID);
-        int result = calendarMapper.update(calendarId, status,userID);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
+        int result = calendarMapper.update(calendarId, status,currentUser.getUserId());
         return result;
     }
 

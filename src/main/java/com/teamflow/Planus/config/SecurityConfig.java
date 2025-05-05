@@ -1,5 +1,6 @@
 package com.teamflow.Planus.config;
 
+import com.teamflow.Planus.domain.auth.login.security.CustomAuthenticationProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 
@@ -24,14 +26,16 @@ public class SecurityConfig {
 
     // 🔐 보안 필터 체인 설정
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationProvider customAuthProvider) throws Exception {
         http
+                .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")))
+                .authenticationProvider(customAuthProvider)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/login", "/signup","/groupsignup", "/static/**").permitAll()
+                        .requestMatchers("/login", "/signup", "/groupsignup", "/static/**", "/error").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/users/**").hasRole("VIEW")
-                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -72,5 +76,6 @@ public class SecurityConfig {
             }
         };
     }
+
 
 }

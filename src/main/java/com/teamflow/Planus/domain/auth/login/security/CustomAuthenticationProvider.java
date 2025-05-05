@@ -25,14 +25,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
-        String rawPassword = authentication.getCredentials().toString();
+        String rawPassword = authentication.getCredentials().toString().trim();
 
         // 1) Load user details
         CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
-
+        log.info("userDetails: {}", userDetails);
         // 2) Retrieve stored bcrypt hash (no SHA-256)
-        String storedHash = userDetails.getPassword();  // ex. "$2a$10$LsgN1pN0L9V6UtYbrzQmdOdKkqDBxF6MTo2gUGcGfwj1Ruthi8m3O"
-
+        String storedHash = userDetails.getPassword().trim();  // ex. "$2a$10$LsgN1pN0L9V6UtYbrzQmdOdKkqDBxF6MTo2gUGcGfwj1Ruthi8m3O"
+        log.info("storedHash: {}", storedHash);
+        log.info("rawPassword: {}", rawPassword);
+        log.info("해시 변환"+passwordEncoder.encode(rawPassword));
+        log.debug("Raw length={} Stored length={}", rawPassword.length(), storedHash.length());
         // 3) Compare raw password with stored bcrypt hash
         if (!passwordEncoder.matches(rawPassword, storedHash)) {
             log.info("bcrypt matching failed for user: {}", username);

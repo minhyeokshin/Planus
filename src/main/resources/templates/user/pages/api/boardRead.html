@@ -185,14 +185,16 @@
         <form th:action="@{/user/pages/api/boardDelete}" method="post" style="margin-top: 10px;">
           <input type="hidden" name="writeId" th:value="${board.writeId}" />
             <input type="hidden" name="boardId" th:value="${board.boardId}" />
+            <input type="hidden" name="groupId"  th:value="${param.groupId}" />
           <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');" style="padding: 6px 12px; font-size: 14px; background-color: crimson; color: white; border: none; border-radius: 4px; cursor: pointer;">게시글 삭제</button>
         </form>
 
         <section style="margin-top: 40px;">
           <h2 style="font-size: 20px; margin-bottom: 10px;">💬 댓글</h2>
 
-          <form action="/user/pages/api/commentWrite" method="post" style="margin-bottom: 20px;">
+          <form th:action="@{/user/pages/api/commentWrite}" method="post" style="margin-bottom: 20px;">
             <input type="hidden" name="boardId" th:value="${board.writeId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
             <textarea name="content" placeholder="댓글을 입력하세요" rows="3" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
             <button type="submit" style="margin-top: 10px; padding: 6px 12px; font-size: 14px; background-color: #333; color: white; border: none; border-radius: 4px;">작성</button>
           </form>
@@ -205,6 +207,7 @@
               <form th:action="@{/user/pages/api/commentDelete}" method="post" style="display:inline;">
                 <input type="hidden" name="commentId" th:value="${comment.commentId}" />
                   <input type="hidden" name="boardId" th:value="${board.writeId}" />
+                  <input type="hidden" name="groupId"  th:value="${groupId}" />
                 <button type="submit" onclick="return confirm('정말 댓글을 삭제하시겠습니까?');"
                         style="font-size: 12px; background: none; border: none; color: red; cursor: pointer; padding-left: 8px;">
                   삭제

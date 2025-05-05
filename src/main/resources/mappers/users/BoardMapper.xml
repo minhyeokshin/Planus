@@ -12,7 +12,8 @@
             user.username AS userName,
             created_at AS createdAt,
             title AS title,
-            content AS content
+            content AS content,
+            board.group_id AS groupId
         FROM board
         LEFT JOIN user
         on board.user_id = user.user_id

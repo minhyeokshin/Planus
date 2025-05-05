@@ -36,9 +36,9 @@
 
     <insert id="writeComment">
         insert into comment
-        (user_id, board_id, content, created_at)
+        (user_id, board_id, content, created_at,group_id)
         values
-            (#{userId},#{boardId},#{content},#{now})
+            (#{userId},#{boardId},#{content},#{now},#{groupId})
     </insert>
 
     <update id="deleteBoard">

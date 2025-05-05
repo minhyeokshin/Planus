@@ -6,5 +6,5 @@ import java.util.List;
 
 @Mapper
 public interface DashBoardMapper {
-    List<String> getUserNameList();
+    List<String> getUserNameList(Long groupId);
 }

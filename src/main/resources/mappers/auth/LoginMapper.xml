@@ -12,7 +12,8 @@
             phone AS phone,
             login_id as loginId,
             password as password,
-            role AS role
+            role AS role,
+            group_id AS groupId
             FROM user
         WHERE login_id = #{loginId}
     </select>

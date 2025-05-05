@@ -6,8 +6,8 @@
 <mapper namespace="com.teamflow.Planus.domain.user.api.mapper.BoardWriteMapper">
     
     <insert id="write">
-        INSERT INTO board (board_id, user_id, created_at, title, content) values
-                              (#{boardId},#{userId},#{now},#{title},#{content})
+        INSERT INTO board (board_id, user_id, created_at, title, content,group_id) values
+                              (#{boardId},#{userId},#{now},#{title},#{content},#{groupId})
     </insert>
 
     <select id="getuserEmailList" resultType="com.teamflow.Planus.vo.UserVO">

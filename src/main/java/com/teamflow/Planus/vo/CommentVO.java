@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentVO {
     private int commentId;
+    private Long groupId;
     private String userId;
     private String userName;
     private int boardId;

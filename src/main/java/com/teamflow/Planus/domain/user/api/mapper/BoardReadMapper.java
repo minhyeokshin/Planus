@@ -12,7 +12,7 @@ import java.util.List;
 public interface BoardReadMapper {
     BoardVO findById(int writeId);
     List<CommentVO> getComment();
-    int writeComment(String content, Long boardId, String userId,LocalDateTime now);
+    int writeComment(String content, Long boardId, String userId,LocalDateTime now,Long groupId);
     int deleteBoard(int writeId, LocalDateTime now,String userId);
     int deleteComment(int commentId,LocalDateTime now,String userId);
     int viewLog(String viewId,int writeId,String userId,LocalDateTime now);

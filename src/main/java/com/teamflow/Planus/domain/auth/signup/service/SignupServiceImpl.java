@@ -34,9 +34,12 @@ public class SignupServiceImpl implements SignupService {
         if (signupMapper.existCheckByUserId(userDTO.getLoginId()) > 0) {
             return false;
         }
-        String bcrypt = passwordEncoder.encode(userDTO.getPassword());
+        // Use only the part before any comma as the raw password
+        String rawPwd = userDTO.getPassword().split(",")[0].trim();
+        log.info("해시 변환전(rawPwd) :{}", rawPwd);
+        String bcrypt = passwordEncoder.encode(rawPwd);
         userDTO.setPassword(bcrypt);
-        log.info("가입 서비스 userDTO: {}", userDTO);
+        log.info("가입 서비스 userDTO (bcrypt 저장 후): {}", userDTO.toString());
         String Phone = userDTO.getUserPhone1()+"-"+userDTO.getUserPhone2()+"-"+userDTO.getUserPhone3();
 
 

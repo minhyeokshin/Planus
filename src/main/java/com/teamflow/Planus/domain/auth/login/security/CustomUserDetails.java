@@ -21,8 +21,9 @@ public class CustomUserDetails implements UserDetails, Serializable {
     private String id;
     private String password;
     private String role;
-    private String clientId;    // ✅ 추가 (User일 경우)
-    private String adminNumber; // ✅ 추가 (Admin일 경우)
+    private String userId;
+    private String name;
+    private Long groupId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

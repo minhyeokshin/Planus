@@ -13,6 +13,7 @@
             user.username AS userName,
             calendar.start_date AS startDate,
             calendar.end_date AS endDate,
+            calendar.group_id AS groupId,
             status AS status
         FROM calendar
         LEFT JOIN user
@@ -23,9 +24,9 @@
     <insert id="write" parameterType="com.teamflow.Planus.vo.CalendarVO">
         insert into
             calendar
-        (calendar_id, title, content, user_id, start_date, end_date)
+        (calendar_id, title, content, user_id, start_date, end_date,group_id)
         VALUES
-            (#{calendarId},#{title},#{content},#{userId},#{startDate},#{endDate})
+            (#{calendarId},#{title},#{content},#{userId},#{startDate},#{endDate},#{groupId})
     </insert>
 
     <update id="delete">
