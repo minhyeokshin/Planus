@@ -37,4 +37,42 @@ public class MailService {
             e.printStackTrace(); // or use a logger
         }
     }
+
+    @Async
+    public void sendGroupNotify(String to, PostDTO post) {
+        try {
+            MimeMessage mime = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject("[그룹 등록] " + post.getTitle());
+            Context ctx = new Context();
+            ctx.setVariable("post", post);
+            String html = templateEngine.process("mail/newGroup", ctx);
+            helper.setText(html, true);
+            mailSender.send(mime);
+            log.info("메일 전송 완료: to={}, title={}", to, post.getTitle());
+        } catch (MessagingException e) {
+            e.printStackTrace(); // or use a logger
+        }
+    }
+
+    @Async
+    public void sendSignUpNotify(String to, PostDTO post) {
+        try {
+            MimeMessage mime = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject("[회원 가입] " + post.getTitle());
+            Context ctx = new Context();
+            ctx.setVariable("post", post);
+            String html = templateEngine.process("mail/newSignUp", ctx);
+            helper.setText(html, true);
+            mailSender.send(mime);
+            log.info("메일 전송 완료: to={}, title={}", to, post.getTitle());
+        } catch (MessagingException e) {
+            e.printStackTrace(); // or use a logger
+        }
+    }
+
+
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserVO {
         private String userId;
         private String username;
+        private Long groupId;
         private String email;
         private String phone;
         private String loginId;

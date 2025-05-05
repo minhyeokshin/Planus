@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>회원가입</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" th:href="@{/static/css/app.css}" />
+	<link rel="stylesheet" th:href="@{/static/css/custom.css}" />
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<style>
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    margin: 0;
+    padding: 0;
+  }
+
+  .signup-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.7s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .signup-container h2 {
+    margin-bottom: 24px;
+    color: #222;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+
+  .form-text {
+    font-size: 12px;
+    color: #777;
+    margin-top: -12px;
+    margin-bottom: 16px;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .phone-input-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .phone-input-group select,
+  .phone-input-group input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 576px) {
+    .signup-container {
+      padding: 20px;
+      margin: 40px auto;
+    }
+
+    .btn-submit {
+      padding: 12px;
+      font-size: 14px;
+    }
+  }
+  </style>
+</head>
+<body class="bg-light">
+
+<main class="d-flex w-100 justify-content-center align-items-center" style="min-height: 100vh;">
+	<div class="signup-container">
+		<h2>회원가입</h2>
+		<form id="signupForm" th:action="@{/signup}" th:object="${user}" method="post">
+			<div class="mb-3">
+				<label class="form-label">ID</label>
+				<input type="text" class="form-control" th:field="*{loginId}" placeholder="아이디를 입력하세요" maxlength="12" pattern="[a-zA-Z0-9]{4,12}" required />
+				<div class="form-text">(영문과 숫자 조합, 4~12자)</div>
+				<div class="form-text" id="userIdCheckMessage"></div>
+				<div th:if="${msg != null}" class="form-text text-danger" th:text="${msg}"></div>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">이메일</label>
+				<input type="email" class="form-control" th:field="*{email}" placeholder="example@email.com" required />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">그룹 ID</label>
+				<input type="number" class="form-control" th:field="*{groupId}" placeholder="그룹 ID" required />
+				<div class="form-text" id="groupIdCheckMessage"></div>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">비밀번호</label>
+				<input type="password" class="form-control" th:field="*{password}" id="userPw" placeholder="비밀번호를 입력하세요" pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,15}" required />
+				<div class="form-text">(영문, 숫자, 특수문자 포함 8~15자)</div>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">비밀번호 확인</label>
+				<input type="password" class="form-control" th:field="*{password}" id="userPwConfirm" placeholder="비밀번호를 다시 입력하세요" required />
+				<div class="form-text" id="passwordMatchMessage"></div>
+				<div id="pwCheckMsg" class="form-text text-danger" style="display:none;">
+					❗ 비밀번호가 일치하지 않습니다.
+				</div>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">이름</label>
+				<input type="text" class="form-control" th:field="*{username}" placeholder="이름을 입력하세요" required />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">연락처</label>
+				<div class="phone-input-group">
+					<select class="form-control d-inline-block" th:field="*{userPhone1}" required>
+						<option value="010">010 (휴대폰)</option>
+						<option value="070">070 (인터넷전화)</option>
+						<option value="050">050 (안심번호)</option>
+					</select>
+					<input type="text" class="form-control d-inline-block" th:field="*{userPhone2}" maxlength="4" placeholder="0000" pattern="\d{3,4}" required />
+					<input type="text" class="form-control d-inline-block" th:field="*{userPhone3}" maxlength="4" placeholder="0000" pattern="\d{4}" required />
+				</div>
+				<input type="hidden" th:field="*{phone}" id="userPhone" />
+			</div>
+<!--			<div class="mb-3">-->
+<!--				<label class="form-label">주소</label>-->
+<!--				<input type="text" class="form-control" id="userAddressSearch" placeholder="주소 검색 버튼을 눌러주세요" readonly required th:value="${userAddressSearch}" />-->
+<!--				<button type="button" id="btn-search-address" class="btn btn-sm btn-secondary mt-2">주소 검색</button>-->
+<!--			</div>-->
+<!--			<div class="mb-3">-->
+<!--				<label class="form-label">상세 주소</label>-->
+<!--				<input type="text" class="form-control" id="userAddressDetail" placeholder="상세 주소를 입력하세요" required th:value="${userAddressDetail}" />-->
+<!--			</div>-->
+<!--			<input type="hidden" th:field="*{userAddress}" id="userAddress" />-->
+<!--			<div class="mb-4">-->
+<!--				<label class="form-label">사업자등록번호</label>-->
+<!--				<input type="text" class="form-control" th:field="*{businessNumber}" placeholder="000-00-00000" pattern="^\d{3}-\d{2}-\d{5}$" required />-->
+<!--				<div class="form-text">000-00-00000 형식</div>-->
+<!--			</div>-->
+			<div class="d-grid">
+				<button type="submit" class="btn btn-primary btn-submit">회원가입</button>
+			</div>
+		</form>
+	</div>
+</main>
+
+<script>
+	// 주소 검색 기능
+	document.getElementById("btn-search-address").addEventListener("click", function () {
+		new daum.Postcode({
+			oncomplete: function (data) {
+				document.getElementById("userAddressSearch").value = data.address;
+			}
+		}).open();
+	});
+
+	// 폼 제출 전 전화번호 조합 및 비밀번호 확인
+	document.addEventListener("DOMContentLoaded", function() {
+		const form = document.getElementById("signupForm");
+		form.addEventListener("submit", function(e) {
+			// 비밀번호 확인
+			const pw = document.getElementById("userPw").value;
+			const pwConfirm = document.getElementById("userPwConfirm").value;
+			const pwCheckMsg = document.getElementById("pwCheckMsg");
+			if (pw !== pwConfirm) {
+				pwCheckMsg.style.display = "block";
+				e.preventDefault();
+				return;
+			} else {
+				pwCheckMsg.style.display = "none";
+			}
+
+			// 주소 합치기
+			const searchAddr = document.getElementById("userAddressSearch").value;
+			const detailAddr = document.getElementById("userAddressDetail").value;
+			document.getElementById("userAddress").value = searchAddr + " " + detailAddr;
+
+			// 전화번호 조합 및 hidden 덮어쓰기
+			const p1 = document.querySelector('select[name="userPhone1"]').value;
+			const p2 = document.querySelector('input[name="userPhone2"]').value;
+			const p3 = document.querySelector('input[name="userPhone3"]').value;
+			document.getElementById("userPhone").value = p1 + "-" + p2 + "-" + p3;
+		});
+	});
+</script>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const pw = document.getElementById("userPw");
+		const confirmPw = document.getElementById("userPwConfirm");
+		const msg = document.getElementById("passwordMatchMessage");
+
+		function checkPasswordMatch() {
+			if (confirmPw.value === "") {
+				msg.textContent = "";
+				return;
+			}
+
+			if (pw.value === confirmPw.value) {
+				msg.textContent = "✅ 비밀번호가 일치합니다.";
+				msg.style.color = "green";
+			} else {
+				msg.textContent = "❌ 비밀번호가 일치하지 않습니다.";
+				msg.style.color = "red";
+			}
+		}
+
+		pw.addEventListener("input", checkPasswordMatch);
+		confirmPw.addEventListener("input", checkPasswordMatch);
+	});
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const userIdInput = document.querySelector('input[name="userId"]');
+    const messageBox = document.getElementById("userIdCheckMessage");
+
+    if (userIdInput && messageBox) {
+      userIdInput.addEventListener("input", function () {
+        const userId = this.value;
+        if (userId.length < 4) {
+          messageBox.textContent = "";
+          return;
+        }
+
+        fetch(`/api/check-userid?userId=${encodeURIComponent(userId)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.exists) {
+              messageBox.textContent = "❌ 이미 사용 중인 ID입니다.";
+              messageBox.style.color = "red";
+            } else {
+              messageBox.textContent = "✅ 사용 가능한 ID입니다.";
+              messageBox.style.color = "green";
+            }
+          });
+      });
+    }
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const groupIdInput = document.querySelector('input[name="groupId"]');
+    const messageBox = document.getElementById("groupIdCheckMessage");
+
+    if (groupIdInput && messageBox) {
+      groupIdInput.addEventListener("input", function () {
+        const groupId = this.value;
+        if (groupId.length < 2) {
+          messageBox.textContent = "";
+          return;
+        }
+
+        fetch(`/api/check-groupId?groupId=${encodeURIComponent(groupId)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.exists) {
+              messageBox.textContent = "✅ 등록 가능한 그룹 ID입니다.";
+              messageBox.style.color = "green";
+            } else {
+              messageBox.innerHTML = `
+    ❌ 존재하지 않는 그룹입니다.<br>
+    👉 <a href="/groupsignup" target="_blank"  style="color:red; text-decoration:underline;">[그룹 등록 페이지로 이동]</a>
+  `;
+              // Do not set messageBox.style.color here to avoid overriding the link color
+            }
+          });
+      });
+    }
+  });
+</script>
+<script th:src="@{/static/js/app.js}"></script>
+</script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  let msg = /*[[${msg}]]*/ null;
+  if (msg !== null && msg !== 'null') {
+    alert(msg);
+  }
+  /*]]>*/
+</script>
+</body>
+</html>

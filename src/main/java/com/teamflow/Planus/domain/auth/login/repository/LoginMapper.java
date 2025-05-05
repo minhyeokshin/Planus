@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface LoginMapper {
 
-    UserVO login(String userId);
+    UserVO login(String loginId);
 }

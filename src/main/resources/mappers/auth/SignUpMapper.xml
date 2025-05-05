@@ -3,7 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.teamflow.Planus.domain.auth.signup.repository.SignUpMapper">
+<mapper namespace="com.teamflow.Planus.domain.auth.signup.mapper.SignupMapper">
     <!-- Define SQL statements here -->
     <!-- (여기에 SQL 정의 작성) -->
+    <!-- 1. 아이디 중복 체크 -->
+    <select id="existCheckByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM user
+        WHERE login_id = #{loginId}
+    </select>
+
+    <!-- 2. 회원가입 -->
+    <insert id="insertUser" parameterType="com.teamflow.Planus.vo.UserVO">
+        INSERT INTO user(
+            user_id,
+            username,
+            group_id,
+            email,
+            phone,
+            login_id,
+            password
+        )
+        VALUES (
+                   #{userId},
+                   #{username},
+                   #{groupId},
+                   #{email},
+                   #{phone},
+                   #{loginId},
+                   #{password}
+               )
+    </insert>
+    
+    <insert id="insertGroup" parameterType="com.teamflow.Planus.vo.GroupVO">
+        INSERT INTO group_list
+        (group_id, group_name,group_email)
+        VALUES (
+                #{groupId},
+                #{groupName},
+                #{groupEmail}
+               )
+
+    </insert>
+
 </mapper>

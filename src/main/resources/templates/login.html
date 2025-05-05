@@ -210,7 +210,8 @@
     </div>
     <div class="right">
         <h2>로그인</h2>
-        <form action="/common/pages/login/login" method="post">
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div class="input-label-group">
                 <label for="username">아이디</label>
                 <span class="hint-inline">(올바른 아이디 형식을 입력해주세요)</span>
@@ -240,6 +241,9 @@
 <!--            </div>-->
             <div class="register">
                 계정이 없으신가요? <a th:href="@{/signup}">회원가입</a>
+            </div>
+            <div class="register">
+                그룹이 없으신가요? <a th:href="@{/groupsignup}">그룹등록</a>
             </div>
         </form>
     </div>
