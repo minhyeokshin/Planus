@@ -14,17 +14,18 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/user/pages/board")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/board-{boardId}")
-    public String board(@PathVariable("boardId") String boardId, Model model) {
+    @GetMapping("/group/{groupId}/board-{boardId}")
+    public String board(@PathVariable("groupId") Long groupId,
+                        @PathVariable("boardId") String boardId, Model model) {
         List<BoardDTO> boardDTOList = boardService.getBoardList(boardId);
         model.addAttribute("boardList", boardDTOList);
-        return "/user/pages/board/board-" + boardId;
+        return "user/pages/board/board";
     }
 
 }

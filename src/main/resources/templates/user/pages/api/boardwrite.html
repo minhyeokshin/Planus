@@ -55,11 +55,11 @@
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
     <div>
         <!-- Toast UI Editor 영역 추가 -->
-        <form action="/user/pages/api/write" method="post">
+        <form th:action="@{'/user/pages/api/group/' +${groupId} +'/board/'+${boardId}+'/write'}" method="post">
             <input type="text" name="title" placeholder="제목" />
             <input type="hidden" name="content" id="content" />
             <input type="hidden" name="boardId" th:value="${param.boardId}" />
-            <input type="hidden" name="redirectUrl" th:value="'/user/pages/board/board-' +${param.boardId}" />
+            <input type="hidden" name="redirectUrl" th:value="@{'/user/group/' + ${groupId} + '/board-' +${boardId}}" />
             <!-- 에디터가 들어갈 div -->
             <div id="editor"></div>
 

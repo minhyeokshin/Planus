@@ -66,10 +66,18 @@
     <!-- Main content area to be injected into layout -->
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
     <div style="margin-top: 20px; text-align: center;">
-        <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin: 0;">📋 자유게시판</h1>
+        <th:block th:each="menu : ${menuList}">
+            <div th:if="${menu.boardId} == ${boardId}" style="font-size: 1.8rem; font-weight: 600; color: #4CAF50; margin-bottom: 10px;">
+                [[${menu.menuName}]]
+            </div>
+        </th:block>
+<!--        <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin: 0;" th:text="${menuList.}"></h1>-->
     </div>
     <div class="write-btn-wrapper">
-        <a th:href="@{/user/pages/api/boardwrite?boardId=3}">
+        <a th:href="@{'/user/pages/api/group/' + ${groupId} + '/write/boardId/' + ${boardId}}">
+            <input type="hidden" name="boardId" th:value="${boardId}" />
+            <input type="hidden" name="redirectUrl" th:value="'/user/group/' +${groupId} + '/board/board-' + ${boardId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
             <button type="button" class="write-btn">✏ 글쓰기</button>
         </a>
     </div>
