@@ -7,5 +7,6 @@
     <select id="getUserNameList" resultType="java.lang.String">
         SELECT username
             FROM user
+        WHERE group_id = #{groupId}
         </select>
 </mapper>

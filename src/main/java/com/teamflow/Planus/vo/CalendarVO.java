@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class CalendarVO {
     private String calendarId;
     private String title;
+    private Long groupId;
     private String content;
     private String userId;
     private LocalDateTime startDate;

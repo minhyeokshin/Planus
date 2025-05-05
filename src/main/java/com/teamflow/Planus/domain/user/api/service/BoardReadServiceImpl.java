@@ -2,7 +2,7 @@ package com.teamflow.Planus.domain.user.api.service;
 
 import com.teamflow.Planus.cache.BoardCache;
 import com.teamflow.Planus.cache.CommentCache;
-import com.teamflow.Planus.cache.LoginCache;
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.api.mapper.BoardReadMapper;
 import com.teamflow.Planus.domain.user.board.mapper.BoardMapper;
 import com.teamflow.Planus.dto.BoardDTO;
@@ -13,6 +13,9 @@ import com.teamflow.Planus.vo.BoardViewLogVO;
 import com.teamflow.Planus.vo.CommentVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +33,10 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public BoardDTO findById(int writeId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
         List<BoardVO> boardVOList = BoardCache.getInstance().getBoardVOList();
         if (boardVOList == null){
             boardVOList = boardMapper.getBoardList();
@@ -43,6 +50,10 @@ public class BoardReadServiceImpl implements BoardReadService {
                         .toList();
 
         BoardVO boardVO = boardVOList.get(0);
+
+        if (!boardVO.getGroupId().equals(currentUser.getGroupId())){
+            throw new AccessDeniedException("해당 게시글에 대한 권한이 없습니다.");
+        }
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .writeId(boardVO.getWriteId())
@@ -84,6 +95,7 @@ public class BoardReadServiceImpl implements BoardReadService {
                     .userName(commentVO.getUserName())
                     .content(commentVO.getContent())
                     .build();
+            log.info("commentDTO:{}",commentDTO.getUserName());
             commentDTOList.add(commentDTO);
         }
         return commentDTOList;
@@ -91,8 +103,15 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public int writeComment(String content, Long boardId) {
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
-        String userName = LoginCache.getInstance().getLoginStatus().getUsername();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
+        String userId = currentUser.getUserId();
+        String userName = currentUser.getName();
+
+        log.info("댓글 작성자 이름 : {}", currentUser.getName());
+
+        log.info("userName: {}", userName);
         log.info("BoardReadServiceImpl");
         log.info("userId: {}", userId);
         log.info("content: {}", content);
@@ -115,6 +134,7 @@ public class BoardReadServiceImpl implements BoardReadService {
                 .userName(userName)
                 .boardId(Math.toIntExact(boardId))
                 .content(content)
+                .groupId(currentUser.getGroupId())
                 .createdAt(LocalDateTime.now())
                 .status(0)
                 .build();
@@ -125,19 +145,21 @@ public class BoardReadServiceImpl implements BoardReadService {
         CommentCache.getInstance().setCommentVOList(commentVOList);
         LocalDateTime now = LocalDateTime.now();
 
-        return boardReadMapper.writeComment(content, boardId, userId,now);
+        return boardReadMapper.writeComment(content, boardId, userId,now,currentUser.getGroupId());
     }
 
     @Override
     public int deleteBoard(int writeId) {
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
         log.info("boardDelete(writeId) : {}", writeId);
         List<BoardVO> boardVOList = BoardCache.getInstance().getBoardVOList();
         if (boardVOList == null){
             boardVOList = boardMapper.getBoardList();
         }
         LocalDateTime now = LocalDateTime.now();
-        int result = boardReadMapper.deleteBoard(writeId,now,userId);
+        int result = boardReadMapper.deleteBoard(writeId,now,currentUser.getUserId());
         if (result > 0){
             boardVOList.removeIf(vo -> vo.getWriteId() == writeId );
             BoardCache.getInstance().setBoardVOList(boardVOList);
@@ -147,7 +169,9 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public int deleteComment(int commentId) {
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
         log.info("commentDelete(commentId) : {}", commentId);
         List<CommentVO> commentVOList = CommentCache.getInstance().getcommentVOList();
         if (commentVOList == null){
@@ -155,7 +179,7 @@ public class BoardReadServiceImpl implements BoardReadService {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        int result = boardReadMapper.deleteComment(commentId,now,userId);
+        int result = boardReadMapper.deleteComment(commentId,now,currentUser.getUserId());
         if (result > 0){
             commentVOList.removeIf(vo -> vo.getCommentId() == commentId);
             CommentCache.getInstance().setCommentVOList(commentVOList);
@@ -166,8 +190,12 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public int viewLog(int writeId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
+
         String viewId = UUID.randomUUID().toString();
-        String userId = LoginCache.getInstance().getLoginStatus().getUserId();
+        String userId = currentUser.getUserId();
         LocalDateTime now = LocalDateTime.now();
         int result = boardReadMapper.viewLog(viewId, writeId, userId, now);
         return result;

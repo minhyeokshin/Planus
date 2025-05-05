@@ -87,9 +87,12 @@ public class CalendarController {
     }
 
 
+//    @RequestMapping(value = "/api/getCalendarList", method = { RequestMethod.GET, RequestMethod.POST })
     @PostMapping("/api/insertSchedule")
     @ResponseBody
     public void insertSchedule(@RequestBody Map<String, Object> map) {
+        log.info("일정등록 컨트롤러 진입");
+        log.info("map: {}", map);
         String title = (String) map.get("title");
         String content = (String) map.get("content");
         LocalDateTime startDate = LocalDateTime.parse((String) map.get("startDate"));

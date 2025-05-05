@@ -1,16 +1,20 @@
 package com.teamflow.Planus.domain.user.dashboard.Service;
 
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.calendar.service.CalendarService;
 import com.teamflow.Planus.domain.user.dashboard.Mapper.DashBoardMapper;
 import com.teamflow.Planus.dto.CalendarDTO;
 import com.teamflow.Planus.dto.CalendarStatsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +27,15 @@ public class DashBaordServiceImpl implements DashBoardService {
 
     @Override
     public Map<String, List<CalendarDTO>> getCalendarList() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+
         List<CalendarDTO> calendarDTOList = calendarService.getTodayCalendarList();
         log.info("calendarDTOList: {}", calendarDTOList);
+
         Map<String, List<CalendarDTO>> calendarMap =
         calendarDTOList.stream()
+                .filter(dto -> Objects.equals(dto.getGroupId(), currentUser.getGroupId()))
                 .map(dto -> {
                     if(dto.getStatus() == 1){
                         dto.setTitle("<s>" + dto.getTitle() + "</s>");
@@ -42,12 +51,14 @@ public class DashBaordServiceImpl implements DashBoardService {
 
     @Override
     public List<String> getUserNameList() {
-        List<String> userNameList = dashBoardMapper.getUserNameList().stream()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+        List<String> userNameList = dashBoardMapper.getUserNameList(currentUser.getGroupId()).stream()
                         .map(String::valueOf)
                                 .map(String::trim)
                                         .distinct()
                                                 .toList();
-        log.info("userNameList: {}", userNameList);
+        log.info("서비스 userNameList: {}", userNameList);
         return userNameList;
     }
 

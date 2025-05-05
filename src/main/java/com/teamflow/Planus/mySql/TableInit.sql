@@ -13,7 +13,7 @@ CREATE TABLE user (
     email VARCHAR(100) COMMENT '이메일 주소',
     phone VARCHAR(50) COMMENT '전화번호',
     login_id VARCHAR(20) COMMENT '로그인용 ID',
-    password VARCHAR(20) COMMENT '로그인 비밀번호',
+    password VARCHAR(255) COMMENT '로그인 비밀번호',
     role ENUM('ADMIN', 'USER') DEFAULT 'USER' COMMENT '권한 (ADMIN 또는 USER)'
 );
 
@@ -97,8 +97,9 @@ ALTER TABLE boardViewLog ADD UNIQUE (user_id, write_id);
 CREATE TABLE group_list (
                             group_id BIGINT,
                             # 이 메뉴가 속한 그룹의 ID. 그룹별로 메뉴를 구분하기 위해 필요.
-                            group_name VARCHAR(50)
+                            group_name VARCHAR(50),
                             # 그룹의 이름
+                            group_email VARCHAR(50)
 );
 
 

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>그룹 등록</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" th:href="@{/static/css/app.css}" />
+	<link rel="stylesheet" th:href="@{/static/css/custom.css}" />
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<style>
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    margin: 0;
+    padding: 0;
+  }
+
+  .signup-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.7s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .signup-container h2 {
+    margin-bottom: 24px;
+    color: #222;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+
+  </style>
+</head>
+<body class="bg-light">
+
+<main class="d-flex w-100 justify-content-center align-items-center" style="min-height: 100vh;">
+	<div class="signup-container">
+		<h2>그룹 등록</h2>
+		<form id="signupForm" th:action="@{/groupsignup}" th:object="${group}" method="post">
+
+
+			<div class="mb-3">
+				<label class="form-label">그룹 이름</label>
+				<input type="text" class="form-control" th:field="*{groupName}" placeholder="이름을 입력하세요" required />
+				<div class="form-text" id="groupIdCheckMessage"></div>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">이메일</label>
+				<input type="email" class="form-control" th:field="*{groupEmail}" placeholder="example@email.com" required />
+			</div>
+
+			<div class="d-grid">
+				<button type="submit" class="btn btn-primary btn-submit">그룹 등록</button>
+			</div>
+		</form>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const groupIdInput = document.querySelector('input[name="groupName"]');
+			const messageBox = document.getElementById("groupIdCheckMessage");
+
+			if (groupIdInput && messageBox) {
+				groupIdInput.addEventListener("input", function () {
+					const groupName = this.value;
+					if (groupName.length < 2) {
+						messageBox.textContent = "";
+						return;
+					}
+
+					fetch(`/api/check-groupName?groupName=${encodeURIComponent(groupName)}`)
+							.then(res => res.json())
+							.then(data => {
+								if (data.exists) {
+									messageBox.textContent = "❌ 이미 등록된 그룹입니다.";
+									messageBox.style.color = "red";
+								} else {
+									messageBox.textContent = "✅ 등록 가능한 그룹입니다.";
+									messageBox.style.color = "green";
+								}
+							});
+				});
+			}
+		});
+	</script>
+</main>
+
+</main>
+
+<script th:src="@{/static/js/app.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  let msg = /*[[${msg}]]*/ null;
+  if (msg !== null && msg !== 'null') {
+    alert(msg);
+  }
+  /*]]>*/
+</script>
+</body>
+</html>

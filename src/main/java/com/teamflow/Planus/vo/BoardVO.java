@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardVO {
     private int writeId;
+    private Long groupId;
     private String boardId;
     private String userId;
     private String userName;

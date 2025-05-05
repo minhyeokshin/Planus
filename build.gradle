@@ -36,7 +36,7 @@ dependencies {
 	// (웹, 보안, JPA, 유효성검사, 메일, 타임리프용 스타터 의존성)
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -81,6 +81,13 @@ dependencies {
 	// OpenAPI documentation for REST API
 	// (REST API 문서 생성을 위한 OpenAPI)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// 🔄 객체 매핑 도구
+	// ModelMapper for DTO <-> Entity mapping
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
+
+	// SHA256
+//	implementation 'commons-codec:commons-codec:1.15'
 }
 
 // Configure test framework to use JUnit Platform
