@@ -1,0 +1,264 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head>
+    <style>
+      /* CSS Reset */
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed,
+      figure, figcaption, footer, header, hgroup,
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+        box-sizing: border-box;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure,
+      footer, header, hgroup, menu, nav, section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+      ol, ul {
+        list-style: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      /* Layout Container */
+      .board-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+      }
+
+      article {
+        margin-top: 40px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #ddd;
+      }
+      article h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #222;
+      }
+      .board-content {
+        font-size: 16px;
+        line-height: 1.7;
+        color: #444;
+        margin-bottom: 30px;
+      }
+      .board-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 10px 0;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+      textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        resize: vertical;
+      }
+
+      button {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .back-button {
+        margin-top: 30px;
+        background-color: #eee;
+        color: #333;
+        border: 1px solid #ccc;
+      }
+      .back-button:hover {
+        background-color: #ddd;
+      }
+      .delete-button {
+        background-color: crimson;
+      }
+      .delete-button:hover {
+        background-color: #b30027;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        border-left: 4px solid #3498db;
+        padding-left: 10px;
+      }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+      table th, table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      table thead {
+        background-color: #f1f1f1;
+      }
+
+      /* Comment Styles */
+      .comment-box {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+      .comment {
+        margin-bottom: 20px;
+      }
+      .comment strong {
+        font-weight: 600;
+      }
+      .comment-time {
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div class="board-container">
+
+        <article style="margin-top: 40px; padding-bottom: 30px; border-bottom: 1px solid #ddd;">
+          <h1 style="font-size: 26px; font-weight: 600; margin-bottom: 10px;" th:text="${board.title}">게시글 제목</h1>
+          <div style="color: #888; font-size: 14px; margin-bottom: 20px;">
+            작성자 <strong th:text="${board.userName}"></strong>
+            작성일 <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd')}"></span>
+          </div>
+          <div class="board-content" style="font-size: 16px; line-height: 1.7; color: #333;" th:utext="${board.content}">
+          </div>
+        </article>
+
+        <form th:action="@{/user/pages/api/boardDelete}" method="post" style="margin-top: 10px;">
+          <input type="hidden" name="writeId" th:value="${board.writeId}" />
+            <input type="hidden" name="boardId" th:value="${board.boardId}" />
+            <input type="hidden" name="groupId"  th:value="${param.groupId}" />
+          <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');" style="padding: 6px 12px; font-size: 14px; background-color: crimson; color: white; border: none; border-radius: 4px; cursor: pointer;">게시글 삭제</button>
+        </form>
+
+        <section style="margin-top: 40px;">
+          <h2 style="font-size: 20px; margin-bottom: 10px;">💬 댓글</h2>
+
+          <form th:action="@{/user/pages/api/commentWrite}" method="post" style="margin-bottom: 20px;">
+            <input type="hidden" name="boardId" th:value="${board.writeId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
+            <textarea name="content" placeholder="댓글을 입력하세요" rows="3" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            <button type="submit" style="margin-top: 10px; padding: 6px 12px; font-size: 14px; background-color: #333; color: white; border: none; border-radius: 4px;">작성</button>
+          </form>
+
+          <div style="border-top: 1px solid #eee; padding-top: 15px;">
+            <div th:each="comment : ${commentList}" style="margin-bottom: 20px;">
+              <strong th:text="${comment.userName}">작성자</strong> ·
+              <span style="font-size: 12px; color: #888;" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+              <p style="margin: 5px 0;" th:text="${comment.content}">댓글 내용</p>
+              <form th:action="@{/user/pages/api/commentDelete}" method="post" style="display:inline;">
+                <input type="hidden" name="commentId" th:value="${comment.commentId}" />
+                  <input type="hidden" name="boardId" th:value="${board.writeId}" />
+                  <input type="hidden" name="groupId"  th:value="${groupId}" />
+                <button type="submit" onclick="return confirm('정말 댓글을 삭제하시겠습니까?');"
+                        style="font-size: 12px; background: none; border: none; color: red; cursor: pointer; padding-left: 8px;">
+                  삭제
+                </button>
+              </form>
+<!--              <button type="button" style="font-size: 12px; background: none; border: none; color: #007bff; cursor: pointer; padding: 0;">답글</button>-->
+
+              <!-- 대댓글 입력창 -->
+<!--              <div style="margin-top: 10px; margin-left: 20px;">-->
+<!--                <textarea placeholder="답글을 입력하세요" rows="2" style="width: 100%; padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px;"></textarea>-->
+<!--                <button type="submit" style="margin-top: 5px; padding: 4px 10px; font-size: 13px; background-color: #555; color: white; border: none; border-radius: 4px;">등록</button>-->
+<!--              </div>-->
+
+              <!-- 대댓글 예시 (Thymeleaf로 구성할 경우 추후 추가) -->
+              <!--
+              <div th:each="reply : ${comment.replies}" style="margin-top: 10px; margin-left: 20px; padding-left: 10px; border-left: 2px solid #ddd;">
+                <strong th:text="${reply.writer}">답글 작성자</strong> ·
+                <span style="font-size: 12px; color: #888;" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                <p style="margin: 5px 0;" th:text="${reply.content}">답글 내용</p>
+              </div>
+              -->
+            </div>
+          </div>
+        </section>
+
+        <section style="margin-top: 50px;">
+          <h2 style="font-size: 22px; margin-bottom: 15px; color: #2c3e50; border-left: 4px solid #3498db; padding-left: 10px;">👁️‍🗨️ 최근 조회 기록</h2>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc; font-size: 14px;">
+            <thead style="background-color: #ecf0f1;">
+              <tr>
+                <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">조회자</th>
+                <th style="padding: 12px; border: 1px solid #ccc; text-align: left;">조회 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="log : ${boardViewLogDTOList}">
+                <td style="padding: 10px; border: 1px solid #ddd; color: #34495e;" th:text="${log.userName}">user</td>
+                <td style="padding: 10px; border: 1px solid #ddd; color: #7f8c8d;" th:text="${#temporals.format(log.viewTime, 'yyyy-MM-dd HH:mm:ss')}">time</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div style="margin-top: 30px;">
+          <button onclick="history.back()" style="padding: 10px 18px; font-size: 16px; font-weight: 600; background-color: #e0e0e0; color: #222; border: 1px solid #bbb; border-radius: 4px; cursor: pointer;">
+            ← 목록으로
+          </button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

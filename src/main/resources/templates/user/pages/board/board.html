@@ -1,0 +1,295 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head>
+    <style>
+        .search-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar select,
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+        .board-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .board-table thead {
+            background-color: #f1f3f5;
+        }
+
+        .board-table th,
+        .board-table td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .board-table th {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .board-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .write-btn-wrapper {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .write-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .write-btn:hover {
+            background-color: #45a049;
+        }
+
+        .pagination-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        .page-jump-form {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        .page-jump-form input[type="number"] {
+            padding: 6px 12px;
+            width: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+        .page-jump-form button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.2s;
+            margin-left: 2px;
+        }
+        .page-jump-form button:hover {
+            background-color: #45a049;
+        }
+        .pagination {
+            margin: 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+        .pagination ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0;
+        }
+        .pagination li {
+            margin: 0;
+        }
+        .pagination a {
+            display: block;
+            padding: 8px 14px;
+            text-decoration: none;
+            color: #333;
+            background-color: #f9f9f9;
+            border-right: 1px solid #ddd;
+            font-size: 1em;
+            transition: background 0.2s, color 0.2s;
+        }
+        .pagination li:last-child a {
+            border-right: none;
+        }
+        .pagination .active a {
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50;
+        }
+        .pagination a:hover {
+            background-color: #45a049;
+            color: white;
+        }
+
+        .page-jump-form button:hover {
+            background-color: #45a049;
+        }
+
+        .board-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div style="margin-top: 20px; text-align: center;">
+        <th:block th:each="menu : ${menuList}">
+            <div th:if="${menu.boardId} == ${boardId}" style="font-size: 1.8rem; font-weight: 600; color: #4CAF50; margin-bottom: 10px;">
+                [[${menu.menuName}]]
+            </div>
+        </th:block>
+<!--        <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin: 0;" th:text="${menuList.}"></h1>-->
+    </div>
+
+    <div class="board-top-bar">
+    <form method="get" th:action="@{/user/api/search}">
+        <div class="search-bar" style="justify-content: flex-start;">
+            <select name="searchType">
+                <option value="title">제목</option>
+                <option value="userName">작성자</option>
+                <option value="writeNo">번호</option>
+            </select>
+            <input type="text" name="keyword" placeholder="검색" />
+            <input type="hidden" name="boardId" th:value="${boardId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
+            <button type="submit">🔍</button>
+        </div>
+    </form>
+
+    <div class="write-btn-wrapper" style="justify-content: flex-end;">
+        <a th:href="@{'/user/pages/api/group/' + ${groupId} + '/write/boardId/' + ${boardId}}">
+            <input type="hidden" name="boardId" th:value="${boardId}" />
+            <input type="hidden" name="redirectUrl" th:value="'/user/group/' +${groupId} + '/board/board-' + ${boardId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
+            <button type="button" class="write-btn">✏ 글쓰기</button>
+        </a>
+    </div>
+    </div>
+
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${List}"
+            th:attr="data-board-id=${board.writeId}"
+            onclick="goToBoard(this)"
+            style="cursor:pointer;">
+            <td th:text="${board.writeId}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.userName}"></td>
+            <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination and page jump combined horizontally -->
+    <div class="pagination-container">
+        <!-- Page Jump Input -->
+        <form class="page-jump-form" th:action="@{${body}}" method="get">
+            <input type="number" name="page" min="1" th:attr="max=${totalPages}" placeholder="Page No" required />
+            <button type="submit">이동</button>
+        </form>
+        <!-- Pagination List -->
+        <div class="pagination" th:if="${totalPages > 0}">
+            <ul>
+                <!-- 이전 페이지 버튼 -->
+                <li th:if="${currentPage > 1}">
+                    <a th:href="@{${body}(page=${currentPage - 1})}">&laquo; Prev</a>
+                </li>
+                <!-- 페이지 번호 버튼 -->
+                <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:classappend="${i == currentPage} ? 'active' : ''">
+                    <a th:href="@{${body}(page=${i})}" th:text="${i}">1</a>
+                </li>
+                <!-- 다음 페이지 버튼 -->
+                <li th:if="${currentPage < totalPages}">
+                    <a th:href="@{${body}(page=${currentPage + 1})}">Next &raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script  th:inline="javascript">
+        const groupId = [[${groupId}]];
+
+        function goToBoard(element) {
+            const id = element.getAttribute('data-board-id');
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch('/user/pages/api/read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify({ writeId: id })
+            }).then(() => {
+                window.location.href = '/user/pages/api/boardRead/' + id + '?groupId=' + groupId;
+            });
+        }
+    </script>
+</div>
+
+
+</body>
+
+</html>

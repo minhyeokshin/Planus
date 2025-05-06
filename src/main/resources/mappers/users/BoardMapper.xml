@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.board.mapper.BoardMapper">
+    <select id="getBoardList" resultType="com.teamflow.Planus.vo.BoardVO">
+        SELECT
+            write_id AS writeId,
+            board_id AS boardId,
+            board.user_id AS userId,
+            user.username AS userName,
+            created_at AS createdAt,
+            title AS title,
+            content AS content,
+            board.group_id AS groupId
+        FROM board
+        LEFT JOIN user
+        on board.user_id = user.user_id
+        WHERE status = 0
+        ORDER BY write_id desc ;
+    </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.calendar.Mapper.CalendarMapper">
+    <select id="getCalendarList" resultType="com.teamflow.Planus.dto.CalendarDTO">
+        SELECT
+            calendar.calendar_id AS calendarId,
+            calendar.title AS title,
+            calendar.content AS content,
+            calendar.user_id AS userId,
+            user.username AS userName,
+            calendar.start_date AS startDate,
+            calendar.end_date AS endDate,
+            calendar.group_id AS groupId,
+            status AS status
+        FROM calendar
+        LEFT JOIN user
+        ON calendar.user_id = user.user_id
+        WHERE view_status = 0;
+    </select>
+
+    <insert id="write" parameterType="com.teamflow.Planus.vo.CalendarVO">
+        insert into
+            calendar
+        (calendar_id, title, content, user_id, start_date, end_date,group_id)
+        VALUES
+            (#{calendarId},#{title},#{content},#{userId},#{startDate},#{endDate},#{groupId})
+    </insert>
+
+    <update id="delete">
+        UPDATE calendar
+        SET
+            view_status = 1
+        WHERE calendar_id = #{calendarId} AND
+              user_id = #{userId}
+    </update>
+    
+    <update id="update">
+        UPDATE calendar
+        SET
+            status = #{status}
+        WHERE calendar_id = #{calendarId} AND
+              user_id = #{userId}
+    </update>
+
+</mapper>

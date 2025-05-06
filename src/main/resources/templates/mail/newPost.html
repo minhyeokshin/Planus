@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${subject}">[메일 제목]</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
+    <table width="100%" bgcolor="#f4f4f4" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center">
+                <table width="600" bgcolor="#ffffff" cellpadding="0" cellspacing="0" style="border-radius:8px; overflow:hidden; margin:20px 0;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color:#4CAF50; color:#ffffff; padding:30px 20px; text-align:center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <h1 style="margin:0; font-size:26px;">📢 Planus 알림</h1>
+                        </td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:30px; font-size:16px; color:#333333; line-height:1.8; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <p style="margin:0 0 18px; font-size:18px; color:#222; font-weight:bold;">
+                                <strong th:text="'새 글 제목: ' + ${post.title}">새 글 제목이 들어갑니다.</strong>
+                            </p>
+                            <div th:utext="'작성자: ' + ${post.author}" style="margin-bottom:10px; padding:10px; background:#f9f9f9; border-radius:5px; font-size:14px; color:#555;"></div>
+                            <div th:text="'작성일: ' + ${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}" style="margin-bottom:10px; padding:10px; background:#f9f9f9; border-radius:5px; font-size:14px; color:#555;"></div>
+                            <div style="margin-top:20px; text-align:left;">
+                                <a th:href="'http://localhost:8080/user/pages/api/boardRead/' + ${post.writeId}"
+                                   style="display:inline-block; background-color:#4CAF50; color:#fff; padding:12px 20px; border-radius:5px; text-decoration:none; font-weight:bold; font-size:15px;">
+                                    👉 글 바로가기
+                                </a>
+                            </div>
+                            <div th:utext="${post.content}" style="padding:15px; background:#ffffff; border:1px solid #ddd; border-radius:5px; font-size:15px; color:#444; line-height:1.7;">
+                                <!-- 본문 내용이 이곳에 삽입됩니다 -->
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color:#f9f9f9; padding:20px; text-align:center; font-size:12px; color:#999999; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <p style="margin:0;">© 2025 Planus. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

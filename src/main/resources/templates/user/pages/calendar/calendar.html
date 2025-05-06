@@ -6,18 +6,270 @@
       layout:decorate="~{user/common/layouts/defaultLayout}">
   <!-- Inherit layout from default admin layout -->
   <!-- (기본 관리자 레이아웃 상속) -->
-<head></head>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 24px 32px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .modal p {
+      margin: 6px 0;
+    }
+
+    .modal button {
+      margin-left: 6px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .modal button:hover {
+      opacity: 0.9;
+    }
+
+    .modal button:nth-child(1) { background-color: #ccc; color: black; }
+    .modal button:nth-child(2) { background-color: #4CAF50; color: white; }
+    .modal button:nth-child(3) { background-color: #f44336; color: white; }
+  </style>
+</head>
 <body>
 
 <div layout:fragment="content">
     <!-- Main content area to be injected into layout -->
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
-    <div>
-        <h1>Insert Content</h1>
-        캘린더 영역
+    <div style="display: flex; gap: 20px;">
+      <!-- Calendar section -->
+      <div style="flex: 2;">
+        <div id="calendar" style="margin-top: 20px;"></div>
+      </div>
+
+      <!-- Today's tasks sidebar -->
+      <div style="flex: 1; margin-top: 20px;">
+        <h3>오늘의 할 일</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: #f2f2f2;">
+              <th style="padding: 8px; border: 1px solid #ddd;">제목</th>
+              <th style="padding: 8px; border: 1px solid #ddd;">담당자</th>
+              <th style="padding: 8px; border: 1px solid #ddd;">완료</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="task : ${todayTasks}"
+                th:attr="onclick=|showModalFromTask('${task.title}', '${task.userName}', '${task.startDate}', '${task.endDate}', '${task.content}', '${task.calendarId}')|"
+                style="cursor: pointer;">
+              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${task.title}"></td>
+              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${task.userName}"></td>
+              <td style="padding: 8px; border: 1px solid #ddd;">
+                <span th:text="${task.status == 1 ? '✅' : '❌'}"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <script>
+      const msg = document.getElementById('flash-msg')?.dataset.msg;
+      // Global variable to store selected calendarId
+      let selectedCalendarId = null;
+      // Global variable to store the selected date string for event creation
+      let selectedDateStr = null;
+      document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          height: 700,
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          displayEventTime: false,
+          events: function(fetchInfo, successCallback, failureCallback) {
+            fetch('/api/schedule')
+              .then(response => response.json())
+              .then(events => {
+                // Change event title format from "작성자. 타이틀" to "[작성자][타이틀]"
+                const mappedEvents = events.map(event => {
+                  if (event.userName && event.title) {
+                    return {
+                      ...event,
+                      title: `[${event.userName}]${event.title.replace('[' + event.userName + ']', '').replace(event.userName + '.', '')}`
+                    };
+                  }
+                  return event;
+                });
+                successCallback(mappedEvents);
+              })
+              .catch(failureCallback);
+          },
+          eventClick: function(info) {
+            const modal = document.getElementById('eventModal');
+            document.getElementById('modalTitle').innerText = info.event.title;
+            document.getElementById('modalUserName').innerText = info.event.extendedProps.userName || '';
+            document.getElementById('modalStart').innerText = info.event.start?.toISOString().split('T')[0];
+            document.getElementById('modalEnd').innerText = info.event.end?.toISOString().split('T')[0];
+            document.getElementById('modalContent').innerText = info.event.extendedProps.content || '';
+            // Store calendarId for use in markComplete/markIncomplete
+            selectedCalendarId = info.event.extendedProps.calendarId;
+            modal.style.display = 'block';
+          },
+          dateClick: function(info) {
+            selectedDateStr = info.dateStr;
+            document.getElementById('newEventTitle').value = '';
+            document.getElementById('createEventModal').style.display = 'block';
+          }
+        });
+        calendar.render();
+      });
+
+      function markComplete() {
+        fetch('/api/success', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ calendarId: selectedCalendarId ,status : 1})
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
+      }
+
+      function markIncomplete() {
+        fetch('/api/fail', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ calendarId: selectedCalendarId ,status : 0})
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
+      }
+
+      function deleteEvent() {
+        fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ calendarId: selectedCalendarId })
+        }).then(response => response.text())
+          .then(resultMsg => {
+            alert(resultMsg);
+            document.getElementById('eventModal').style.display = 'none';
+            window.location.href = '/user/pages/calendar/calendar';
+          });
+      }
+
+      // Function to submit a new event from the modal
+      function submitNewEvent() {
+        const title = document.getElementById('newEventTitle').value;
+        const start = document.getElementById('newEventStart').value;
+        const end = document.getElementById('newEventEnd').value;
+        const content = document.getElementById('newEventContent').value;
+
+        if (title && start && end) {
+            fetch('/api/insertSchedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: title,
+                    startDate: start,
+                    endDate: end,
+                    content: content
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Close modal and reload calendar page
+                    document.getElementById('createEventModal').style.display = 'none';
+                    window.location.reload();
+                } else {
+                    alert('일정 등록 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error inserting schedule:', error);
+                alert('일정 등록 중 오류가 발생했습니다.');
+            });
+        } else {
+            alert('제목, 시작일, 마감일을 모두 입력해주세요.');
+        }
+      }
+
+      // Show modal from task row
+      function showModalFromTask(title, userName, startDate, endDate, content, calendarId) {
+        const modal = document.getElementById('eventModal');
+        document.getElementById('modalTitle').innerText = `[${userName}]${title}`;
+        document.getElementById('modalUserName').innerText = userName || '';
+        document.getElementById('modalStart').innerText = startDate?.split('T')[0] || '';
+        document.getElementById('modalEnd').innerText = endDate?.split('T')[0] || '';
+        document.getElementById('modalContent').innerText = content || '';
+        selectedCalendarId = calendarId;
+        modal.style.display = 'block';
+      }
+    </script>
+
+
+
+<div id="eventModal" class="modal">
+  <h3 id="modalTitle"></h3>
+  <p><strong>작성자:</strong> <span id="modalUserName"></span></p>
+  <p><strong>시작일:</strong> <span id="modalStart"></span></p>
+  <p><strong>마감일:</strong> <span id="modalEnd"></span></p>
+  <p><strong>내용:</strong></p>
+  <div id="modalContent" style="white-space:pre-wrap;"></div>
+  <div style="margin-top: 16px; text-align: right;">
+    <button onclick="document.getElementById('eventModal').style.display='none'">닫기</button>
+    <button onclick="markComplete()">✅ 완료</button>
+    <button onclick="markIncomplete()">❌ 미완료</button>
+    <button onclick="deleteEvent()">🗑 삭제</button>
+  </div>
 </div>
 
+  <div id="flash-msg" th:data-msg='${msg}'></div>
+
+<div id="createEventModal" class="modal">
+  <h3>새 일정 등록</h3>
+  <p><strong>제목:</strong><br>
+    <input type="text" id="newEventTitle" style="width:100%; padding:6px; margin-top:4px;"></p>
+  <p><strong>시작일:</strong><br>
+    <input type="datetime-local" id="newEventStart" style="width:100%; padding:6px;"></p>
+  <p><strong>마감일:</strong><br>
+    <input type="datetime-local" id="newEventEnd" style="width:100%; padding:6px;"></p>
+  <p><strong>내용:</strong><br>
+    <textarea id="newEventContent" rows="4" style="width:100%; padding:6px;"></textarea></p>
+  <div style="margin-top: 16px; text-align: right;">
+    <button onclick="document.getElementById('createEventModal').style.display='none'">취소</button>
+    <button onclick="submitNewEvent()">등록</button>
+  </div>
+</div>
+
+</div>
 
 </body>
 </html>

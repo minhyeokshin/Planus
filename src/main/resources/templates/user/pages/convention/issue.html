@@ -1,9 +1,9 @@
 <!-- Thymeleaf template for Submenu Page -->
 <!-- (서브메뉴 페이지용 타임리프 템플릿) -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{user/common/layouts/defaultLayout}">
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{user/common/layouts/defaultLayout}">
 <!-- Inherit layout from default admin layout -->
 <!-- (기본 관리자 레이아웃 상속) -->
 <head></head>
@@ -13,7 +13,79 @@
     <!-- Main content area to be injected into layout -->
     <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
     <div>
-        <h1>Issue Convention 작성예정</h1>
+        <h1>Issue Convention</h1>
+        <div id="copyBox" style="position: relative; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; background-color: #f9f9f9; font-family: monospace;">
+            <button onclick="copyContent()" style="position: absolute; top: 8px; right: 8px; background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">복사</button>
+            <pre style="white-space: pre-wrap; margin: 0;">
+### 📌 이슈 내용
+간단한 설명
+
+### ✅ 작업 항목
+- [ ] 할 일 1
+- [ ] 할 일 2
+
+### 💬 참고
+예상되는 영향이나 고민
+
+            </pre>
+        </div>
+        <br><br>
+        <h1>Issue Example</h1>
+        <div style="position: relative; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; background-color: #f4f8ff; font-family: monospace; margin-top: 1rem;">
+            <button onclick="copyExample()" style="position: absolute; top: 8px; right: 8px; background-color: #2196F3; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">예시 복사</button>
+            <pre style="white-space: pre-wrap; margin: 0;">
+### 📌 이슈 내용
+캘린더에서 날짜 클릭 시 일정 제목을 입력받아 서버에 전송하고 DB에 저장하는 기능 추가
+
+### ✅ 작업 항목
+- [x] FullCalendar dateClick 이벤트에 fetch 추가
+- [x] POST 요청 처리용 ScheduleController 생성
+- [x] Schedule 엔티티 및 ScheduleRepository 구현
+- [ ] 저장된 일정 조회 API 작성
+- [ ] 일정 리스트 페이지에 렌더링 처리
+
+### 💬 참고
+- 서버 연동 후 일정 새로고침 시 유지되는지 확인 필요
+- 클라이언트 에러 핸들링 방식 검토 필요
+            </pre>
+        </div>
+        <script>
+            function copyExample() {
+                const text = `### 📌 이슈 내용
+캘린더에서 날짜 클릭 시 일정 제목을 입력받아 서버에 전송하고 DB에 저장하는 기능 추가
+
+### ✅ 작업 항목
+- [x] FullCalendar dateClick 이벤트에 fetch 추가
+- [x] POST 요청 처리용 ScheduleController 생성
+- [x] Schedule 엔티티 및 ScheduleRepository 구현
+- [ ] 저장된 일정 조회 API 작성
+- [ ] 일정 리스트 페이지에 렌더링 처리
+
+### 💬 참고
+- 서버 연동 후 일정 새로고침 시 유지되는지 확인 필요
+- 클라이언트 에러 핸들링 방식 검토 필요`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('복사되었습니다.');
+                });
+            }
+        </script>
+
+        <script>
+            function copyContent() {
+                const text = `### 📌 이슈 내용
+간단한 설명
+
+### ✅ 작업 항목
+- [ ] 할 일 1
+- [ ] 할 일 2
+
+### 💬 참고
+예상되는 영향이나 고민`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('복사되었습니다.');
+                });
+            }
+        </script>
     </div>
 </div>
 

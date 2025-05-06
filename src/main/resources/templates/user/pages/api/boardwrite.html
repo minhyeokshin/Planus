@@ -1,0 +1,89 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+  <!-- Inherit layout from default admin layout -->
+  <!-- (기본 관리자 레이아웃 상속) -->
+<head>
+  <style>
+    form {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    input[name="title"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #editor {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Main content area to be injected into layout -->
+    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+    <div>
+        <!-- Toast UI Editor 영역 추가 -->
+        <form th:action="@{'/user/pages/api/group/' +${groupId} +'/board/'+${boardId}+'/write'}" method="post">
+            <input type="text" name="title" placeholder="제목" />
+            <input type="hidden" name="content" id="content" />
+            <input type="hidden" name="boardId" th:value="${param.boardId}" />
+            <input type="hidden" name="redirectUrl" th:value="@{'/user/group/' + ${groupId} + '/board-' +${boardId}}" />
+            <!-- 에디터가 들어갈 div -->
+            <div id="editor"></div>
+
+            <button type="submit">작성</button>
+        </form>
+
+        <!-- Toast UI Editor CDN 및 초기화 스크립트 -->
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        <script>
+          const editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            height: '500px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical'
+          });
+
+          document.querySelector('form').addEventListener('submit', function () {
+            document.querySelector('#content').value = editor.getHTML();
+          });
+        </script>
+    </div>
+</div>
+
+
+</body>
+</html>

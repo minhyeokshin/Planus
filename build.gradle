@@ -54,6 +54,10 @@ dependencies {
 	// (롬복 어노테이션 프로세서)
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// Lombok for testing
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	// Development tools for hot reloading
 	// (개발 시 핫리로드 도구)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -77,6 +81,13 @@ dependencies {
 	// OpenAPI documentation for REST API
 	// (REST API 문서 생성을 위한 OpenAPI)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// 🔄 객체 매핑 도구
+	// ModelMapper for DTO <-> Entity mapping
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
+
+	// SHA256
+//	implementation 'commons-codec:commons-codec:1.15'
 }
 
 // Configure test framework to use JUnit Platform
