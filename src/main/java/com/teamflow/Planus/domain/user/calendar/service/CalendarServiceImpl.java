@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -77,6 +78,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public int writeCalendar(String title, String content, LocalDateTime startDate, LocalDateTime endDate) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -129,6 +131,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public int deleteCalendar(String calendarId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
@@ -139,6 +142,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public int updateCalendar(String calendarId, int status) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();

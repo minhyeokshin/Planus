@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ public class BoardReadServiceImpl implements BoardReadService {
     }
 
     @Override
+    @Transactional
     public int writeComment(String content, Long boardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
@@ -149,6 +151,7 @@ public class BoardReadServiceImpl implements BoardReadService {
     }
 
     @Override
+    @Transactional
     public int deleteBoard(int writeId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
@@ -168,6 +171,7 @@ public class BoardReadServiceImpl implements BoardReadService {
     }
 
     @Override
+    @Transactional
     public int deleteComment(int commentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
@@ -192,7 +196,6 @@ public class BoardReadServiceImpl implements BoardReadService {
     public int viewLog(int writeId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
-
 
         String viewId = UUID.randomUUID().toString();
         String userId = currentUser.getUserId();
