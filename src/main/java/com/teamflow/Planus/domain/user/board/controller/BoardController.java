@@ -1,10 +1,12 @@
 package com.teamflow.Planus.domain.user.board.controller;
 
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.board.service.BoardService;
 import com.teamflow.Planus.dto.BoardDTO;
 import com.teamflow.Planus.util.Pagination;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,4 +35,20 @@ public class BoardController {
         return "user/pages/board/board";
     }
 
+    @GetMapping("/api/search")
+//    @RequestMapping(value = "/api/search", method = { RequestMethod.GET, RequestMethod.POST })
+    public String search(@RequestParam(name = "boardId", required = false) String boardId,
+                                 @RequestParam(defaultValue = "1") int page,
+                                 @RequestParam String searchType,
+                                 @RequestParam String keyword,
+                                 @AuthenticationPrincipal CustomUserDetails userDetails,
+                                 Model model) {
+        log.info("searchType: {}, keyword: {}", searchType, keyword);
+        log.info("boardId: {}", boardId);
+        List<BoardDTO> boardDTOList = boardService.searchBoardList(boardId, searchType, keyword);
+        model.addAttribute("boardList", boardDTOList);
+        String bodypath = "/user/api/search?searchType=" + searchType + "&keyword=" + keyword + "&boardId=" + boardId + "&groupId=" + userDetails.getGroupId();
+        Pagination.paginate(model, boardDTOList, page, bodypath );
+        return "user/pages/board/board";
+    }
 }

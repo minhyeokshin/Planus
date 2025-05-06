@@ -8,6 +8,36 @@
 <!-- (기본 관리자 레이아웃 상속) -->
 <head>
     <style>
+        .search-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar select,
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
         .board-table {
             width: 100%;
             border-collapse: separate;
@@ -138,6 +168,13 @@
         .page-jump-form button:hover {
             background-color: #45a049;
         }
+
+        .board-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
@@ -155,7 +192,23 @@
         </th:block>
 <!--        <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin: 0;" th:text="${menuList.}"></h1>-->
     </div>
-    <div class="write-btn-wrapper">
+
+    <div class="board-top-bar">
+    <form method="get" th:action="@{/user/api/search}">
+        <div class="search-bar" style="justify-content: flex-start;">
+            <select name="searchType">
+                <option value="title">제목</option>
+                <option value="userName">작성자</option>
+                <option value="writeNo">번호</option>
+            </select>
+            <input type="text" name="keyword" placeholder="검색" />
+            <input type="hidden" name="boardId" th:value="${boardId}" />
+            <input type="hidden" name="groupId" th:value="${groupId}" />
+            <button type="submit">🔍</button>
+        </div>
+    </form>
+
+    <div class="write-btn-wrapper" style="justify-content: flex-end;">
         <a th:href="@{'/user/pages/api/group/' + ${groupId} + '/write/boardId/' + ${boardId}}">
             <input type="hidden" name="boardId" th:value="${boardId}" />
             <input type="hidden" name="redirectUrl" th:value="'/user/group/' +${groupId} + '/board/board-' + ${boardId}" />
@@ -163,6 +216,8 @@
             <button type="button" class="write-btn">✏ 글쓰기</button>
         </a>
     </div>
+    </div>
+
     <table class="board-table">
         <thead>
         <tr>
