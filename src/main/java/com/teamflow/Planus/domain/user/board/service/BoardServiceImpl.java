@@ -42,6 +42,7 @@ public class BoardServiceImpl implements BoardService {
         boardVOList =
                 boardVOList.stream()
                         .filter(dto -> Objects.equals(dto.getGroupId(), currentUser.getGroupId()))
+                        .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
                         .toList();
 
         log.info("가공후 boardVOList size: {}", boardVOList.size());
