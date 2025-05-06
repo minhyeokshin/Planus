@@ -17,12 +17,9 @@ public class MenuServiceImpl implements MenuService {
     private final MenuMapper menuMapper;
 
     @Override
-    public List<MenuDTO> getMenuList() {
+    public List<MenuDTO> getMenuList(Long groupId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
-
-        List<MenuDTO> menuList = menuMapper.getMenuList(currentUser.getGroupId());
+        List<MenuDTO> menuList = menuMapper.getMenuList(groupId);
 
         return menuList;
     }

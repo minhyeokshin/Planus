@@ -71,6 +71,12 @@ public class BoardWriteServiceImpl implements BoardWriteService {
         LocalDateTime now = LocalDateTime.now();
         int result = boardWriteMapper.write(title, content, boardId,currentUser.getUserId(),now,currentUser.getGroupId());
         List<UserVO> userEmailList = boardWriteMapper.getuserEmailList();
+
+        userEmailList =
+                userEmailList.stream()
+                        .filter(vo -> vo.getGroupId() != null && vo.getGroupId().equals(currentUser.getGroupId()))
+                        .toList();
+
         String to;
         if (result > 0){
             for (UserVO email : userEmailList) {

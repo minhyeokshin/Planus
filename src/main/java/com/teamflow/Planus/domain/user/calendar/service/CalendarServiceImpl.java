@@ -107,18 +107,21 @@ public class CalendarServiceImpl implements CalendarService {
         userEmailList =
                 userEmailList.stream()
                         .filter(vo -> vo.getRole().equals("ADMIN"))
+                        .filter(vo -> vo.getGroupId() != null && vo.getGroupId().equals(currentUser.getGroupId()))
                         .toList();
 
         String to;
         if (result > 0) {
-            for (UserVO email : userEmailList) {
-                to = email.getEmail();
-                PostDTO postDTO = PostDTO.builder()
-                        .title(title)
-                        .content(content)
-                        .createdAt(LocalDateTime.now())
-                        .author(userId).build();
-                mailService.sendPostNotification(to,postDTO);
+            if (!userEmailList.isEmpty()) {
+                for (UserVO email : userEmailList) {
+                    to = email.getEmail();
+                    PostDTO postDTO = PostDTO.builder()
+                            .title(title)
+                            .content(content)
+                            .createdAt(LocalDateTime.now())
+                            .author(userId).build();
+                    mailService.sendPostNotification(to, postDTO);
+                }
             }
         }
 
