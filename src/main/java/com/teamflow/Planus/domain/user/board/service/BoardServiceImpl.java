@@ -69,4 +69,32 @@ public class BoardServiceImpl implements BoardService {
 
         return boardDTOList;
     }
+
+    @Override
+    public List<BoardDTO> searchBoardList(String boardId, String searchType, String keyword) {
+        List<BoardDTO> boardDTOList = getBoardList(boardId);
+        log.info("서비스 keyword: {}, searchType: {}", keyword, searchType);
+        String searchWord = keyword.trim();
+
+        if (!searchWord.isEmpty()) {
+            if (searchType.equals("title")) {
+                boardDTOList =
+                        boardDTOList.stream()
+                                .filter(dto -> dto.getTitle().equals(searchWord))
+                                .toList();
+            } else if (searchType.equals("userName")) {
+                boardDTOList =
+                        boardDTOList.stream()
+                                .filter(dto -> dto.getUserName().equals(searchWord))
+                                .toList();
+            } else if (searchType.equals("writeNo")) {
+                boardDTOList =
+                        boardDTOList.stream()
+                                .filter(dto -> dto.getWriteId() == Integer.parseInt(searchWord))
+                                .toList();
+            }
+        }
+        log.info("검색 사이즈 : {}", boardDTOList.size());
+        return boardDTOList;
+    }
 }
