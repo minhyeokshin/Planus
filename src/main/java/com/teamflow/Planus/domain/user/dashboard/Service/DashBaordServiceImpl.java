@@ -31,7 +31,7 @@ public class DashBaordServiceImpl implements DashBoardService {
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
 
         List<CalendarDTO> calendarDTOList = calendarService.getTodayCalendarList();
-        log.info("calendarDTOList: {}", calendarDTOList);
+//        log.info("calendarDTOList: {}", calendarDTOList);
 
         Map<String, List<CalendarDTO>> calendarMap =
         calendarDTOList.stream()
@@ -43,7 +43,7 @@ public class DashBaordServiceImpl implements DashBoardService {
                     return dto;
                 })
                 .collect(Collectors.groupingBy(CalendarDTO::getUserName));
-        log.info("calendarMap: {}", calendarMap);
+//        log.info("calendarMap: {}", calendarMap);
 
 
         return calendarMap;
@@ -58,7 +58,7 @@ public class DashBaordServiceImpl implements DashBoardService {
                                 .map(String::trim)
                                         .distinct()
                                                 .toList();
-        log.info("서비스 userNameList: {}", userNameList);
+//        log.info("서비스 userNameList: {}", userNameList);
         return userNameList;
     }
 
@@ -84,7 +84,7 @@ public class DashBaordServiceImpl implements DashBoardService {
 
             calendarStatsDTOMap.put(userName, stats);
         }
-        log.info("calendarStatsDTOMap: {}", calendarStatsDTOMap);
+//        log.info("calendarStatsDTOMap: {}", calendarStatsDTOMap);
         return calendarStatsDTOMap;
     }
 }

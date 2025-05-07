@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LoginMapper {
 
     UserVO login(String loginId);
+    int passwordChange(String userId,String newPassword);
 }

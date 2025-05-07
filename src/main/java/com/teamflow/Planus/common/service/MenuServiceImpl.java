@@ -36,7 +36,12 @@ public class MenuServiceImpl implements MenuService {
                 .build();
 
         Long groupId = currentUser.getGroupId();
-        int result = menuMapper.insertMenuList(menuDTO);
+
+        int result = 0;
+        if (currentUser.getRole().equals("ROLE_ADMIN")){
+            result = menuMapper.insertMenuList(menuDTO);
+        }
+
         return result;
     }
 
@@ -46,7 +51,11 @@ public class MenuServiceImpl implements MenuService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
 
-        int result = menuMapper.deleteMenu(menuName,currentUser.getGroupId());
+        int result = 0;
+        if (currentUser.getRole().equals("ROLE_ADMIN")){
+            result = menuMapper.deleteMenu(menuName,currentUser.getGroupId());
+        }
+
         return result;
     }
 
@@ -56,7 +65,12 @@ public class MenuServiceImpl implements MenuService {
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
 
         Long groupId = currentUser.getGroupId();
-        int result = menuMapper.updateMenu(menuName,menuId,groupId);
-        return 0;
+        int result = 0;
+
+        if (currentUser.getRole().equals("ROLE_ADMIN")){
+            result = menuMapper.updateMenu(menuName,menuId,groupId);
+        }
+
+        return result;
     }
 }

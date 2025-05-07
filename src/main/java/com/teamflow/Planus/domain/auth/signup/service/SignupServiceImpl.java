@@ -42,6 +42,14 @@ public class SignupServiceImpl implements SignupService {
         log.info("가입 서비스 userDTO (bcrypt 저장 후): {}", userDTO.toString());
         String Phone = userDTO.getUserPhone1()+"-"+userDTO.getUserPhone2()+"-"+userDTO.getUserPhone3();
 
+        String roll;
+        if(userDTO.getRole() != null &&
+        (userDTO.getRole().equals("ADMIN") || userDTO.getRole().equals("admin"))){
+            roll = "ADMIN";
+        }else{
+            roll = "USER";
+        }
+
 
         // 서버에서 세팅해야 하는 필드들
         UserVO userVO = UserVO.builder()
@@ -50,6 +58,7 @@ public class SignupServiceImpl implements SignupService {
                 .groupId(userDTO.getGroupId())
                 .email(userDTO.getEmail())
                 .phone(Phone)
+                .role(roll)
                 .loginId(userDTO.getLoginId())
                 .password(userDTO.getPassword())
                 .build();
@@ -88,21 +97,41 @@ public class SignupServiceImpl implements SignupService {
                 .groupEmail(groupDTO.getGroupEmail())
                 .build();
 
-        PostDTO postDTO = PostDTO.builder()
-                .title(groupDTO.getGroupName())
-                .content(String.valueOf(groupId))
-                .build();
 
-        log.info("PostDTO: {}", postDTO);
 
         if(groupCheckMapper.existsByGroupName(groupDTO.getGroupName())){
             return false;
         }
 
+        String rawPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+
         if (signupMapper.insertGroup(groupVO) > 0 ){
+
+            UserDTO userDTO = UserDTO.builder()
+                    .username(groupDTO.getGroupName())
+                    .groupId(groupId)
+                    .email(groupDTO.getGroupEmail())
+                    .role("ADMIN")
+                    .loginId(UUID.randomUUID().toString().replace("-", "").substring(0, 10))
+                    .password(rawPassword)
+                    .build();
+
+            signUp(userDTO);
+
+            String content = String.valueOf(groupId)
+                    + "<br><br>관리자 ID : " + userDTO.getLoginId()
+                    + "<br><br>관리자 PW : " + rawPassword;
+
+            PostDTO postDTO = PostDTO.builder()
+                    .title(groupDTO.getGroupName())
+                    .content(content)
+                    .build();
+
             mailService.sendGroupNotify(groupDTO.getGroupEmail(), postDTO);
+
             return true;
         }
+
 
         return false;
     }
