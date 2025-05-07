@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="${subject}">[메일 제목]</title>
+    <title th:text="${subject}+'회원님, 신규 회원 가입을 진심으로 환영합니다 🎉'">[메일 제목]</title>
 </head>
 <body style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
 <table width="100%" bgcolor="#f4f4f4" cellpadding="0" cellspacing="0">
@@ -32,7 +32,7 @@
                     <td style="padding:30px; font-size:16px; color:#333333; line-height:1.8; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                         <p style="margin:0 0 18px; font-size:18px; color:#222; font-weight:bold;">
                             <strong>
-                                <span th:text="${post.title}"></span> 신규 회원 가입을 진심으로 환영합니다 🎉
+                                <span th:text="${post.title}"></span>회원님, 신규 회원 가입을 진심으로 환영합니다 🎉
                             </strong>
                         </p>
                         <div>

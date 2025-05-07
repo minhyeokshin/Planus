@@ -22,7 +22,8 @@
             email,
             phone,
             login_id,
-            password
+            password,
+            role
         )
         VALUES (
                    #{userId},
@@ -31,7 +32,8 @@
                    #{email},
                    #{phone},
                    #{loginId},
-                   #{password}
+                   #{password},
+                   #{role}
                )
     </insert>
     

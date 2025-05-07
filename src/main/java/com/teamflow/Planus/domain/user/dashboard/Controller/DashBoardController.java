@@ -23,7 +23,7 @@ public class DashBoardController {
     public String index(Model model) {
 
         Map<String, List<CalendarDTO>> calendarMap = dashBoardService.getCalendarList();
-        log.info("calendarMap: {}", calendarMap);
+//        log.info("calendarMap: {}", calendarMap);
         model.addAttribute("calendarMap", calendarMap);
 
         List<String> userNameList = dashBoardService.getUserNameList();
@@ -31,11 +31,11 @@ public class DashBoardController {
 
         Map<String, CalendarStatsDTO> calendarStatsMap = dashBoardService.getCalendarStatsList();
         model.addAttribute("calendarStatsMap", calendarStatsMap);
-        log.info("calendarStatsMap: {}", calendarStatsMap);
+//        log.info("calendarStatsMap: {}", calendarStatsMap);
 
-        for (String userName : userNameList) {
-            log.info("Key Matching: {}, Exists: {}", userName, calendarStatsMap.containsKey(userName));
-        }
+//        for (String userName : userNameList) {
+//            log.info("Key Matching: {}, Exists: {}", userName, calendarStatsMap.containsKey(userName));
+//        }
 
         return "user/pages/index"; }
 }
