@@ -113,7 +113,9 @@ ALTER TABLE group_list ADD column gitHubOwnerName VARCHAR(255);
 ALTER TABLE group_list ADD column gitHubRepoName VARCHAR(255);
 ALTER TABLE group_list ADD column gitHubToken VARCHAR(255);
 ALTER TABLE group_list ADD column gitHubTokenDate VARCHAR(255);
+ALTER TABLE group_list ADD INDEX (group_id);
 
+DROP TABLE IF EXISTS gitHubCommit;
 
 CREATE TABLE gitHubCommit(
     commit_id VARCHAR(255) PRIMARY KEY ,
@@ -124,6 +126,8 @@ CREATE TABLE gitHubCommit(
     commit_date DATETIME,
     commitURL VARCHAR(255),
     FOREIGN KEY (group_id) REFERENCES group_list(group_id));
+
+DROP TABLE IF EXISTS gitHubPr;
 
 CREATE TABLE gitHubPr(
     pr_id VARCHAR(255) PRIMARY KEY ,
@@ -136,6 +140,10 @@ CREATE TABLE gitHubPr(
     prURL VARCHAR(255),
     FOREIGN KEY (group_id) REFERENCES group_list(group_id));
 
+
+
+
+DROP TABLE IF EXISTS gitHubIssue;
 
 CREATE TABLE gitHubIssue(
     issue_id VARCHAR(255) PRIMARY KEY ,

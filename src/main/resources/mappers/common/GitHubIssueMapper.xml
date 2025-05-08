@@ -16,7 +16,7 @@
         FROM group_list
     </select>
 
-    <insert id="insertPr" parameterType="java.util.List">
+    <insert id="insertIssue" parameterType="java.util.List">
         INSERT INTO gitHubIssue (issue_id, issue_title, group_id, user_name, user_email, issue_date, issue_status, issueURL)
         VALUES
         <foreach collection="list" item="issue" separator=",">
