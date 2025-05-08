@@ -90,6 +90,9 @@ dependencies {
 //	implementation 'commons-codec:commons-codec:1.15'
 
 	implementation 'org.kohsuke:github-api:2.0-rc.3'
+
+
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
 }
 
 // Configure test framework to use JUnit Platform
