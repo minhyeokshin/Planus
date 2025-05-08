@@ -135,3 +135,15 @@ CREATE TABLE gitHubPr(
     status ENUM('open', 'closed', 'merged') DEFAULT 'open' COMMENT 'PR 상태',
     prURL VARCHAR(255),
     FOREIGN KEY (group_id) REFERENCES group_list(group_id));
+
+
+CREATE TABLE gitHubIssue(
+    issue_id VARCHAR(255) PRIMARY KEY ,
+    issue_title VARCHAR(255),
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    issue_date DATETIME,
+    issue_status ENUM('open', 'closed') DEFAULT 'open' COMMENT '이슈 상태',
+    issueURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));
