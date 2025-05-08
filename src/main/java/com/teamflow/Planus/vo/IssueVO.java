@@ -11,12 +11,14 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupVO {
+public class IssueVO {
+    private String issueId;
+    private String issueTitle;
     private Long groupId;
-    private String groupName;
-    private String groupEmail;
-    private String gitHubRepo;
-    private String gitHubOwner;
-    private String gitHubToken;
-    private LocalDateTime gitHubTokenDate;
+    private String issueStatus;
+    private String issueURL;
+    private String userName;
+    private String userEmail;
+    private LocalDateTime issueDate;
+
 }

@@ -110,7 +110,7 @@
   <!-- Main content area to be injected into layout -->
   <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
   <div>
-    <h2> 최근 GitHub PR 목록</h2><br>
+    <h2> 최근 GitHub Issue 목록</h2><br>
     <div class="table-responsive rounded shadow-sm">
       <table class="table table-hover align-middle">
         <thead>
@@ -123,13 +123,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="pr : ${prList}">
-          <td class="text-muted" th:text="${#temporals.format(pr.prDate, 'yyyy-MM-dd HH:mm')}"></td>
-          <td class="fw-bold" th:text="${pr.userName}"></td>
-          <td th:text="${pr.prTitle}"></td>
-          <td th:text="${pr.prStatus}"></td>
+        <tr th:each="issue : ${issueList}">
+          <td class="text-muted" th:text="${#temporals.format(issue.issueDate, 'yyyy-MM-dd HH:mm')}"></td>
+          <td class="fw-bold" th:text="${issue.userName}"></td>
+          <td th:text="${issue.issueTitle}"></td>
+          <td th:text="${issue.issueStatus}"></td>
           <td>
-            <a class="text-primary fw-semibold" th:href="${pr.prURL}" target="_blank">🔗 이동</a>
+            <a class="text-primary fw-semibold" th:href="${issue.issueURL}" target="_blank">🔗 이동</a>
           </td>
         </tr>
         </tbody>
