@@ -3,6 +3,7 @@ package com.teamflow.Planus.domain.user.github.service;
 import com.teamflow.Planus.cache.GitCommitCache;
 import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.github.mapper.GitHubCommitMapper;
+import com.teamflow.Planus.dto.CommitDTO;
 import com.teamflow.Planus.util.TokenEncryptor;
 import com.teamflow.Planus.vo.CommitVO;
 import com.teamflow.Planus.vo.GroupVO;
@@ -108,11 +109,12 @@ public class GitHubCommitServiceImpl implements GitHubCommitService {
     }
 
     @Override
-    public List<CommitVO> getCommitList() {
+    public List<CommitDTO> getCommitList() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
         Long groupId = currentUser.getGroupId();
         List<CommitVO> commitVOList = GitCommitCache.getInstance().getCommitVOList();
+        List<CommitDTO> commitDTOList = new ArrayList<>();
         if(commitVOList.isEmpty()){
             commitVOList = gitHubCommitMapper.getCommitList();
             GitCommitCache.getInstance().setCommitVOList(commitVOList);
@@ -123,6 +125,18 @@ public class GitHubCommitServiceImpl implements GitHubCommitService {
                         .sorted((c1, c2) -> c2.getCommitDate().compareTo(c1.getCommitDate()))
                         .toList();
 
-        return commitVOList;
+        for(CommitVO commitVO : commitVOList){
+            CommitDTO commitDTO = CommitDTO.builder()
+                    .commitId(commitVO.getCommitId())
+                    .commitMsg(commitVO.getCommitMsg())
+                    .userName(commitVO.getUserName())
+                    .commitURL(commitVO.getCommitURL())
+                    .commitDate(commitVO.getCommitDate())
+                    .build();
+            commitDTOList.add(commitDTO);
+        }
+        
+        
+        return commitDTOList;
     }
 }

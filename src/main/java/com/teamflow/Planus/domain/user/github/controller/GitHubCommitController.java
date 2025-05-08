@@ -1,7 +1,7 @@
 package com.teamflow.Planus.domain.user.github.controller;
 
 import com.teamflow.Planus.domain.user.github.service.GitHubCommitService;
-import com.teamflow.Planus.vo.CommitVO;
+import com.teamflow.Planus.dto.CommitDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ public class GitHubCommitController {
 
     @GetMapping("/user/pages/board/commitList")
     public String commitList(Model model) {
-        List<CommitVO> commitList = gitHubCommitService.getCommitList();
+        List<CommitDTO> commitList = gitHubCommitService.getCommitList();
         log.info("commitList: {}", commitList);
         log.info("commitSize : {}", commitList.size());
         model.addAttribute("commitList", commitList);
