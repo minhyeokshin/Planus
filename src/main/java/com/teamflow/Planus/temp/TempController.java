@@ -28,8 +28,8 @@ public class TempController {
 //    @GetMapping("/board/commitList")
 //    public String board1() { return "user/pages/board/commitList"; }
 
-    @GetMapping("/board/prList")
-    public String board2() { return "user/pages/board/prList"; }
+//    @GetMapping("/board/prList")
+//    public String board2() { return "user/pages/board/prList"; }
 
     @GetMapping("/api/boardwrite")
     public String board3() { return "user/pages/api/boardwrite"; }

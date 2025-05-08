@@ -17,18 +17,7 @@ CREATE TABLE user (
     role ENUM('ADMIN', 'USER') DEFAULT 'USER' COMMENT '권한 (ADMIN 또는 USER)'
 );
 
-DROP TABLE IF EXISTS pull_request;
 
-CREATE TABLE pull_request (
-    id INT PRIMARY KEY AUTO_INCREMENT COMMENT 'PR 고유 ID',
-    github_pr_id INT UNIQUE COMMENT 'GitHub PR ID',
-    group_id BIGINT COMMENT '소속 그룹 ID',
-    title VARCHAR(255) NOT NULL COMMENT 'PR 제목',
-    url VARCHAR(255) COMMENT 'PR URL',
-    author VARCHAR(100) COMMENT '작성자',
-    status ENUM('open', 'closed', 'merged') DEFAULT 'open' COMMENT 'PR 상태',
-    created_at DATETIME COMMENT '생성일시'
-);
 
 DROP TABLE IF EXISTS board;
 
@@ -128,10 +117,21 @@ ALTER TABLE group_list ADD column gitHubTokenDate VARCHAR(255);
 
 CREATE TABLE gitHubCommit(
     commit_id VARCHAR(255) PRIMARY KEY ,
-    commit_msg VARCHAR(255),
+    commit_msg LONGTEXT,
     group_id BIGINT,
     user_name VARCHAR(255),
     user_email VARCHAR(255),
     commit_date DATETIME,
     commitURL VARCHAR(255),
-    FOREIGN KEY (group_id) REFERENCES group_list(group_id))
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));
+
+CREATE TABLE gitHubPr(
+    pr_id VARCHAR(255) PRIMARY KEY ,
+    pr_title VARCHAR(255),
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    pr_date DATETIME,
+    status ENUM('open', 'closed', 'merged') DEFAULT 'open' COMMENT 'PR 상태',
+    prURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));

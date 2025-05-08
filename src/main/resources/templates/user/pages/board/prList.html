@@ -4,89 +4,139 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{user/common/layouts/defaultLayout}">
-  <!-- Inherit layout from default admin layout -->
-  <!-- (기본 관리자 레이아웃 상속) -->
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
 <head>
-<style>
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 1em;
-  }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
 
-  th {
-    background-color: #f0f4f8;
-    color: #333;
-    font-weight: 600;
-    text-align: left;
-    padding: 1em;
-    border-bottom: 1px solid #ddd;
-  }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 2em;
+      background: linear-gradient(to right, #e3f2fd, #f1f3f5);
+      color: #212529;
+    }
 
-  td {
-    padding: 1em;
-    border-bottom: 1px solid #eee;
-    color: #444;
-  }
+    h2 {
+      font-size: 2em;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 1.5em;
+      border-left: 5px solid #000000;
+      padding-left: 0.7em;
+      background: linear-gradient(90deg, #000000, #000000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-  tr:hover {
-    background-color: #f9fbfc;
-  }
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #ffffff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease-in-out;
+    }
 
-  a {
-    color: #007bff;
-    font-weight: 500;
-  }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+      vertical-align: top;
+    }
 
-  a:hover {
-    text-decoration: underline;
-  }
-</style>
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 18%;
+      white-space: nowrap;
+    }
+
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 15%;
+      word-break: break-all;
+    }
+
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 47%;
+      word-break: break-word;
+    }
+
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        width: 10%;
+        word-break: break-word;
+      }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 10%;
+      word-break: break-word;
+    }
+
+    thead {
+      background-color: #dee2e6;
+    }
+
+    tr:hover {
+      background-color: #f1f3f5;
+      transform: scale(1.01);
+      transition: all 0.2s ease-in-out;
+    }
+
+    a {
+      color: #1c7ed6;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      color: #1864ab;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
 <div layout:fragment="content">
-    <!-- Main content area to be injected into layout -->
-    <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
-    <div>
-      <h2>📦 최근 Pull Request 목록</h2>
-      <table>
+  <!-- Main content area to be injected into layout -->
+  <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+  <div>
+    <h2> 최근 GitHub PR 목록</h2><br>
+    <div class="table-responsive rounded shadow-sm">
+      <table class="table table-hover align-middle">
         <thead>
-          <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>날짜</th>
-            <th>상태</th>
-            <th>링크</th>
-          </tr>
+        <tr class="bg-light">
+          <th>날짜</th>
+          <th>작성자</th>
+          <th>msg</th>
+          <th>상태</th>
+          <th>링크</th>
+        </tr>
         </thead>
-        <tbody id="pr-body"></tbody>
+        <tbody>
+        <tr th:each="pr : ${prList}">
+          <td class="text-muted" th:text="${#temporals.format(pr.prDate, 'yyyy-MM-dd HH:mm')}"></td>
+          <td class="fw-bold" th:text="${pr.userName}"></td>
+          <td th:text="${pr.prTitle}"></td>
+          <td th:text="${pr.prStatus}"></td>
+          <td>
+            <a class="text-primary fw-semibold" th:href="${pr.prURL}" target="_blank">🔗 이동</a>
+          </td>
+        </tr>
+        </tbody>
       </table>
-
-      <script>
-        fetch("https://api.github.com/repos/Buildify-SSG/Buildify_Phase-2/pulls?state=all")
-          .then(res => res.json())
-          .then(data => {
-            const tbody = document.getElementById("pr-body");
-            data.slice(0, 10).forEach(pr => {
-              const tr = document.createElement("tr");
-              tr.innerHTML = `
-                <td>${pr.title}</td>
-                <td>${pr.user.login}</td>
-                <td>${new Date(pr.created_at).toLocaleString()}</td>
-                <td>${pr.state === 'open' ? '🟢 오픈' : (pr.merged_at ? '🟣 머지됨' : '🔴 클로즈')}</td>
-                <td><a href="${pr.html_url}" target="_blank">🔗 이동</a></td>
-              `;
-              tbody.appendChild(tr);
-            });
-          });
-      </script>
     </div>
+
+  </div>
 </div>
 
 
