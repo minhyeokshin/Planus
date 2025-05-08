@@ -119,3 +119,19 @@ CREATE TABLE board_menu (
 );
 
 ALTER TABLE board_menu ADD column status tinyint default 0;
+
+ALTER TABLE group_list ADD column gitHubOwnerName VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubRepoName VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubToken VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubTokenDate VARCHAR(255);
+
+
+CREATE TABLE gitHubCommit(
+    commit_id VARCHAR(255) PRIMARY KEY ,
+    commit_msg VARCHAR(255),
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    commit_date DATETIME,
+    commitURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id))

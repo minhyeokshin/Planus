@@ -100,6 +100,34 @@
 				<input type="email" class="form-control" th:field="*{groupEmail}" placeholder="example@email.com" required />
 			</div>
 
+			<div class="mb-3">
+				<label class="form-label">GitHub Repo</label>
+				<input type="text" class="form-control" th:field="*{gitHubRepo}" placeholder="ex) Planus" required />
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">GitHub Owner</label>
+				<input type="text" class="form-control" th:field="*{gitHubOwner}" placeholder="이름or조직명" required />
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">GitHub Token</label>
+				<input type="text" class="form-control" th:field="*{gitHubToken}" placeholder="토큰 입력" required />
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">GitHub Token 만료일</label>
+				<select class="form-control" th:field="*{gitHubTokenDate}" required>
+					<option value="" disabled selected>기간을 선택하세요</option>
+					<option th:value="${T(java.time.LocalDateTime).now().plusMonths(1)}">1개월 후</option>
+					<option th:value="${T(java.time.LocalDateTime).now().plusMonths(3)}">3개월 후</option>
+					<option th:value="${T(java.time.LocalDateTime).now().plusMonths(6)}">6개월 후</option>
+					<option th:value="${T(java.time.LocalDateTime).now().plusYears(1)}">1년 후</option>
+				</select>
+			</div>
+
+
+
 			<div class="d-grid">
 				<button type="submit" class="btn btn-primary btn-submit">그룹 등록</button>
 			</div>

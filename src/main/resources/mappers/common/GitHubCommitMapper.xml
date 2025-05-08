@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.github.mapper.GitHubCommitMapper">
+    <select id="getGroup" resultType="com.teamflow.Planus.vo.GroupVO">
+        SELECT
+            group_id AS groupId,
+            group_name AS groupName,
+            group_email AS groupEmail,
+            gitHubRepoName AS gitHubRepo,
+            gitHubOwnerName AS gitHubOwner,
+            gitHubToken AS gitHubToken,
+            gitHubTokenDate AS gitHubTokenDate
+        FROM group_list
+    </select>
+
+    <insert id="insertCommit" parameterType="java.util.List">
+        INSERT INTO gitHubCommit (commit_id, commit_msg, group_id, user_name, user_email, commit_date, commitURL)
+        VALUES
+        <foreach collection="list" item="commit" separator=",">
+            (#{commit.commitId}, #{commit.commitMsg}, #{commit.groupId}, #{commit.userName}, #{commit.userEmail}, #{commit.commitDate}, #{commit.commitURL})
+        </foreach>
+        ON DUPLICATE KEY UPDATE commit_id = commit_id , group_id = group_id
+    </insert>
+
+    <select id="getCommitList" resultType="com.teamflow.Planus.vo.CommitVO">
+        SELECT
+            commit_id AS commitId,
+            commit_msg AS commitMsg,
+            group_id AS groupId,
+            user_name AS userName,
+            user_email AS userEmail,
+            commit_date AS commitDate,
+            commitURL AS commitURL
+        FROM gitHubCommit
+    </select>
+</mapper>

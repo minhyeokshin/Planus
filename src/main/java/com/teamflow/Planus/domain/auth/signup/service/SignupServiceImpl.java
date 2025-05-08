@@ -8,6 +8,7 @@ import com.teamflow.Planus.dto.PostDTO;
 import com.teamflow.Planus.dto.UserDTO;
 import com.teamflow.Planus.util.MailService;
 import com.teamflow.Planus.util.SnowflakeIdGenerator;
+import com.teamflow.Planus.util.TokenEncryptor;
 import com.teamflow.Planus.vo.GroupVO;
 import com.teamflow.Planus.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,10 @@ public class SignupServiceImpl implements SignupService {
         }
         // Use only the part before any comma as the raw password
         String rawPwd = userDTO.getPassword().split(",")[0].trim();
-        log.info("해시 변환전(rawPwd) :{}", rawPwd);
+//        log.info("해시 변환전(rawPwd) :{}", rawPwd);
         String bcrypt = passwordEncoder.encode(rawPwd);
         userDTO.setPassword(bcrypt);
-        log.info("가입 서비스 userDTO (bcrypt 저장 후): {}", userDTO.toString());
+//        log.info("가입 서비스 userDTO (bcrypt 저장 후): {}", userDTO.toString());
         String Phone = userDTO.getUserPhone1()+"-"+userDTO.getUserPhone2()+"-"+userDTO.getUserPhone3();
 
         String roll;
@@ -95,6 +96,10 @@ public class SignupServiceImpl implements SignupService {
                 .groupId(groupId)
                 .groupName(groupDTO.getGroupName())
                 .groupEmail(groupDTO.getGroupEmail())
+                .gitHubOwner(groupDTO.getGitHubOwner())
+                .gitHubRepo(groupDTO.getGitHubRepo())
+                .gitHubToken(TokenEncryptor.encrypt(groupDTO.getGitHubToken()))
+                .gitHubTokenDate(groupDTO.getGitHubTokenDate())
                 .build();
 
 

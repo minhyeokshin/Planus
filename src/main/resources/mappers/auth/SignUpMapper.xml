@@ -39,13 +39,16 @@
     
     <insert id="insertGroup" parameterType="com.teamflow.Planus.vo.GroupVO">
         INSERT INTO group_list
-        (group_id, group_name,group_email)
+        (group_id, group_name, group_email, gitHubRepoName, gitHubOwnerName, gitHubToken, gitHubTokenDate)
         VALUES (
                 #{groupId},
                 #{groupName},
-                #{groupEmail}
+                #{groupEmail},
+                #{gitHubRepo},
+                #{gitHubOwner},
+                #{gitHubToken},
+                #{gitHubTokenDate}
                )
-
     </insert>
 
 </mapper>
