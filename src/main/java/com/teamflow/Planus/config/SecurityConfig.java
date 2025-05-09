@@ -20,7 +20,7 @@ public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
 
@@ -33,9 +33,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/signup", "/groupsignup", "/static/**", "/error").permitAll()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/users/**").hasRole("VIEW")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN", "VIEW")
+//                        .requestMatchers("/users/**").hasRole("VIEW")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

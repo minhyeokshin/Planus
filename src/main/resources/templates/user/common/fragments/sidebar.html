@@ -24,7 +24,7 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" th:if="${userRole == 'ROLE_ADMIN'}">
                     <a class="sidebar-link d-flex align-items-center" th:href="@{/user/pages/api/menuManagement}">
                         <i class="align-middle" data-feather="square"></i>
                         <span class="align-middle">메뉴 관리</span>

@@ -38,6 +38,6 @@ public class BoardWriteController {
                                 Model model) {
         model.addAttribute("groupId", groupId);
         model.addAttribute("boardId", boardId);
-        return "user/pages/api/boardWrite"; // 타임리프 HTML 경로
+        return "user/pages/api/boardwrite"; // 타임리프 HTML 경로
     }
 }

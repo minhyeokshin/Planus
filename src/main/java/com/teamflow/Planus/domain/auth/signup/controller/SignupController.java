@@ -61,7 +61,7 @@ public class SignupController {
         boolean result = signupService.groupSignUp(groupDTO);
 
         if (result) {
-            rttr.addFlashAttribute("msg", "그룹등록 성공!");
+            rttr.addFlashAttribute("msg", "그룹등록 성공! 그룹번호 이메일 확인부탁드립니다!");
             log.info("----------------- : " + groupDTO.getGroupName());
             return "redirect:/login";
         } else {

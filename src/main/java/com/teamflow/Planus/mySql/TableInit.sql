@@ -17,18 +17,7 @@ CREATE TABLE user (
     role ENUM('ADMIN', 'USER') DEFAULT 'USER' COMMENT '권한 (ADMIN 또는 USER)'
 );
 
-DROP TABLE IF EXISTS pull_request;
 
-CREATE TABLE pull_request (
-    id INT PRIMARY KEY AUTO_INCREMENT COMMENT 'PR 고유 ID',
-    github_pr_id INT UNIQUE COMMENT 'GitHub PR ID',
-    group_id BIGINT COMMENT '소속 그룹 ID',
-    title VARCHAR(255) NOT NULL COMMENT 'PR 제목',
-    url VARCHAR(255) COMMENT 'PR URL',
-    author VARCHAR(100) COMMENT '작성자',
-    status ENUM('open', 'closed', 'merged') DEFAULT 'open' COMMENT 'PR 상태',
-    created_at DATETIME COMMENT '생성일시'
-);
 
 DROP TABLE IF EXISTS board;
 
@@ -119,3 +108,50 @@ CREATE TABLE board_menu (
 );
 
 ALTER TABLE board_menu ADD column status tinyint default 0;
+
+ALTER TABLE group_list ADD column gitHubOwnerName VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubRepoName VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubToken VARCHAR(255);
+ALTER TABLE group_list ADD column gitHubTokenDate VARCHAR(255);
+ALTER TABLE group_list ADD INDEX (group_id);
+
+DROP TABLE IF EXISTS gitHubCommit;
+
+CREATE TABLE gitHubCommit(
+    commit_id VARCHAR(255) PRIMARY KEY ,
+    commit_msg LONGTEXT,
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    commit_date DATETIME,
+    commitURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));
+
+DROP TABLE IF EXISTS gitHubPr;
+
+CREATE TABLE gitHubPr(
+    pr_id VARCHAR(255) PRIMARY KEY ,
+    pr_title VARCHAR(255),
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    pr_date DATETIME,
+    status ENUM('open', 'closed', 'merged') DEFAULT 'open' COMMENT 'PR 상태',
+    prURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));
+
+
+
+
+DROP TABLE IF EXISTS gitHubIssue;
+
+CREATE TABLE gitHubIssue(
+    issue_id VARCHAR(255) PRIMARY KEY ,
+    issue_title VARCHAR(255),
+    group_id BIGINT,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255),
+    issue_date DATETIME,
+    issue_status ENUM('open', 'closed') DEFAULT 'open' COMMENT '이슈 상태',
+    issueURL VARCHAR(255),
+    FOREIGN KEY (group_id) REFERENCES group_list(group_id));

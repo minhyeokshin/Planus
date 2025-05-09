@@ -1,0 +1,144 @@
+<!-- Thymeleaf template for Submenu Page -->
+<!-- (서브메뉴 페이지용 타임리프 템플릿) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/layouts/defaultLayout}">
+<!-- Inherit layout from default admin layout -->
+<!-- (기본 관리자 레이아웃 상속) -->
+<head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 2em;
+      background: linear-gradient(to right, #e3f2fd, #f1f3f5);
+      color: #212529;
+    }
+
+    h2 {
+      font-size: 2em;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 1.5em;
+      border-left: 5px solid #000000;
+      padding-left: 0.7em;
+      background: linear-gradient(90deg, #000000, #000000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #ffffff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease-in-out;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+      vertical-align: top;
+    }
+
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 18%;
+      white-space: nowrap;
+    }
+
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 15%;
+      word-break: break-all;
+    }
+
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 47%;
+      word-break: break-word;
+    }
+
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        width: 10%;
+        word-break: break-word;
+      }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 10%;
+      word-break: break-word;
+    }
+
+    thead {
+      background-color: #dee2e6;
+    }
+
+    tr:hover {
+      background-color: #f1f3f5;
+      transform: scale(1.01);
+      transition: all 0.2s ease-in-out;
+    }
+
+    a {
+      color: #1c7ed6;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      color: #1864ab;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+  <!-- Main content area to be injected into layout -->
+  <!-- (레이아웃에 삽입될 주요 콘텐츠 영역) -->
+  <div>
+    <h2> 최근 GitHub Issue 목록</h2><br>
+    <div class="table-responsive rounded shadow-sm">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr class="bg-light">
+          <th>날짜</th>
+          <th>작성자</th>
+          <th>msg</th>
+          <th>상태</th>
+          <th>링크</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="issue : ${issueList}">
+          <td class="text-muted" th:text="${#temporals.format(issue.issueDate, 'yyyy-MM-dd HH:mm')}"></td>
+          <td class="fw-bold" th:text="${issue.userName}"></td>
+          <td th:text="${issue.issueTitle}"></td>
+          <td th:text="${issue.issueStatus}"></td>
+          <td>
+            <a class="text-primary fw-semibold" th:href="${issue.issueURL}" target="_blank">🔗 이동</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -17,4 +17,10 @@
             FROM user
         WHERE login_id = #{loginId}
     </select>
+    
+    <update id="passwordChange">
+        UPDATE user
+        SET password = #{newPassword}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

@@ -30,7 +30,7 @@ public class CalendarController {
 
 
         model.addAttribute("todayTasks", todayTasks);
-        return "/user/pages/calendar/calendar";
+        return "user/pages/calendar/calendar";
     }
 
     // 풀캘린더 리스트

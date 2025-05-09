@@ -18,7 +18,8 @@
         FROM calendar
         LEFT JOIN user
         ON calendar.user_id = user.user_id
-        WHERE view_status = 0;
+        WHERE view_status = 0 AND
+              user.role = 'USER';
     </select>
 
     <insert id="write" parameterType="com.teamflow.Planus.vo.CalendarVO">

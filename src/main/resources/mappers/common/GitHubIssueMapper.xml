@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.github.mapper.GitHubIssueMapper">
+    <select id="getGroup" resultType="com.teamflow.Planus.vo.GroupVO">
+        SELECT
+            group_id AS groupId,
+            group_name AS groupName,
+            group_email AS groupEmail,
+            gitHubRepoName AS gitHubRepo,
+            gitHubOwnerName AS gitHubOwner,
+            gitHubToken AS gitHubToken,
+            gitHubTokenDate AS gitHubTokenDate
+        FROM group_list
+    </select>
+
+    <insert id="insertIssue" parameterType="java.util.List">
+        INSERT INTO gitHubIssue (issue_id, issue_title, group_id, user_name, user_email, issue_date, issue_status, issueURL)
+        VALUES
+        <foreach collection="list" item="issue" separator=",">
+            (#{issue.issueId},
+             #{issue.issueTitle},
+             #{issue.groupId},
+             #{issue.userName},
+             #{issue.userEmail},
+             #{issue.issueDate},
+             #{issue.issueStatus},
+             #{issue.issueURL})
+        </foreach>
+        ON DUPLICATE KEY UPDATE issue_id = issue_id , group_id = group_id
+    </insert>
+
+
+    <select id="getIssueList" resultType="com.teamflow.Planus.vo.IssueVO">
+        SELECT
+            issue_id AS issueId,
+            issue_title AS issueTitle,
+            group_id AS groupId,
+            user_name AS userName,
+            user_email AS userEmail,
+            issue_date AS issueDate,
+            issue_status AS issueStatus,
+            issueURL AS issueURL
+        FROM gitHubIssue
+    </select>
+</mapper>

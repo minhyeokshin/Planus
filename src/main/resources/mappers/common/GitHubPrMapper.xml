@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamflow.Planus.domain.user.github.mapper.GitHubPrMapper">
+    <select id="getGroup" resultType="com.teamflow.Planus.vo.GroupVO">
+        SELECT
+            group_id AS groupId,
+            group_name AS groupName,
+            group_email AS groupEmail,
+            gitHubRepoName AS gitHubRepo,
+            gitHubOwnerName AS gitHubOwner,
+            gitHubToken AS gitHubToken,
+            gitHubTokenDate AS gitHubTokenDate
+        FROM group_list
+    </select>
+
+    <insert id="insertPr" parameterType="java.util.List">
+        INSERT INTO gitHubPr (pr_id, pr_title, group_id, user_name, user_email, pr_date, status, prURL)
+        VALUES
+        <foreach collection="list" item="pr" separator=",">
+            (#{pr.prId},
+             #{pr.prTitle},
+             #{pr.groupId},
+             #{pr.userName},
+             #{pr.userEmail},
+             #{pr.prDate},
+             #{pr.prStatus},
+             #{pr.prURL})
+        </foreach>
+        ON DUPLICATE KEY UPDATE pr_id = pr_id , group_id = group_id
+    </insert>
+
+
+    <select id="getPrList" resultType="com.teamflow.Planus.vo.PrVO">
+        SELECT
+            pr_id AS prId,
+            pr_title AS prTitle,
+            group_id AS groupId,
+            user_name AS userName,
+            user_email AS userEmail,
+            pr_date AS prDate,
+            status AS prStatus,
+            prURL AS prURL
+        FROM gitHubPr
+    </select>
+</mapper>

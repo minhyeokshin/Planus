@@ -8,5 +8,6 @@
         SELECT username
             FROM user
         WHERE group_id = #{groupId}
+        AND role = 'USER';
         </select>
 </mapper>

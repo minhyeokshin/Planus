@@ -26,8 +26,17 @@ public class SidebarController {
         }
 
         Long groupId = userDetails.getGroupId();
-        log.info("groupId: {}", groupId);
+//        log.info("groupId: {}", groupId);
         return groupId;
+    }
+
+    @ModelAttribute("userRole")
+    public String getUserRole(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            log.warn("userDetails is null");
+            return null;
+        }
+        return userDetails.getRole();
     }
 
     @ModelAttribute("menuList")
