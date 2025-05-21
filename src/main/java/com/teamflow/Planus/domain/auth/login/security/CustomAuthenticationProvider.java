@@ -1,5 +1,6 @@
 package com.teamflow.Planus.domain.auth.login.security;
 
+import com.teamflow.Planus.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Lazy;
@@ -21,6 +22,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
 
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -40,7 +42,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 4) Authentication success
-        return new UsernamePasswordAuthenticationToken(userDetails, rawPassword, userDetails.getAuthorities());
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, rawPassword, userDetails.getAuthorities());
+        
+        // 5) Generate JWT token
+        String token = jwtTokenProvider.generateToken(auth);
+        log.info("Generated JWT token for user {}: {}", username, token);
+        
+        return auth;
     }
 
     @Override

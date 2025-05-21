@@ -210,7 +210,7 @@
     </div>
     <div class="right">
         <h2>로그인</h2>
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/login}" method="post" id="loginForm">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div class="input-label-group">
                 <label for="username">아이디</label>
@@ -224,7 +224,6 @@
             </div>
             <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
 
-
             <button type="submit">로그인</button>
 
             <div th:if="${param.error == 'true'}">
@@ -235,10 +234,6 @@
                 <p style="color: green;">성공적으로 로그아웃 되었습니다.</p>
             </div>
 
-<!--            <div class="footer-links">-->
-<!--                <a th:href="@{/find-id}">아이디찾기</a>-->
-<!--                <a th:href="@{/find-password}">비밀번호 찾기</a>-->
-<!--            </div>-->
             <div class="register">
                 계정이 없으신가요? <a th:href="@{/signup}">회원가입</a>
             </div>
@@ -256,6 +251,28 @@
 <script th:if="${msg != null}">
     alert('[[${msg}]]');
     console.log('[[${msg}]]');
+</script>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/login', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 </script>
 
 </body>

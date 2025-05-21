@@ -24,6 +24,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
     private String userId;
     private String name;
     private Long groupId;
+    private String groupName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
