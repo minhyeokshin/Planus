@@ -29,7 +29,13 @@
              #{issue.issueStatus},
              #{issue.issueURL})
         </foreach>
-        ON DUPLICATE KEY UPDATE issue_id = issue_id , group_id = group_id
+        ON DUPLICATE KEY UPDATE
+          issue_title = VALUES(issue_title),
+          user_name = VALUES(user_name),
+          user_email = VALUES(user_email),
+          issue_date = VALUES(issue_date),
+          issue_status = VALUES(issue_status),
+          issueURL = VALUES(issueURL)
     </insert>
 
 

@@ -92,6 +92,12 @@
       </div>
     </div>
     <script>
+      function formatLocalDateTime(dateObj) {
+        if (!dateObj) return '';
+        const offset = dateObj.getTimezoneOffset() * 60000;
+        const localISOTime = new Date(dateObj.getTime() - offset).toISOString().slice(0, 16);
+        return localISOTime;
+      }
       const msg = document.getElementById('flash-msg')?.dataset.msg;
       // Global variable to store selected calendarId
       let selectedCalendarId = null;
@@ -128,11 +134,11 @@
           },
           eventClick: function(info) {
             const modal = document.getElementById('eventModal');
-            document.getElementById('modalTitle').innerText = info.event.title;
-            document.getElementById('modalUserName').innerText = info.event.extendedProps.userName || '';
-            document.getElementById('modalStart').innerText = info.event.start?.toISOString().split('T')[0];
-            document.getElementById('modalEnd').innerText = info.event.end?.toISOString().split('T')[0];
-            document.getElementById('modalContent').innerText = info.event.extendedProps.content || '';
+            document.getElementById('modalTitleInput').value = info.event.title;
+            // document.getElementById('modalUserName').innerText = info.event.extendedProps.userName || '';
+            document.getElementById('modalStart').value = formatLocalDateTime(info.event.start);
+            document.getElementById('modalEnd').value = formatLocalDateTime(info.event.end);
+            document.getElementById('modalContent').value = info.event.extendedProps.content || '';
             // Store calendarId for use in markComplete/markIncomplete
             selectedCalendarId = info.event.extendedProps.calendarId;
             modal.style.display = 'block';
@@ -185,6 +191,43 @@
           });
       }
 
+
+      function updateCalendar() {
+        const calendarId = selectedCalendarId;
+        // const userName = document.getElementById('modalUserName').value;
+        const title = document.getElementById('modalTitleInput').value.trim();
+        const start = document.getElementById('modalStart').value;
+        const end = document.getElementById('modalEnd').value;
+        const content = document.getElementById('modalContent').value;
+
+        if (!title || !start || !end || !calendarId) {
+          alert('제목, 시작일, 마감일은 필수입니다.');
+          return;
+        }
+
+        fetch('/api/updateSchedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            calendarId: calendarId,
+            title: title,
+            startDate: start,
+            endDate: end,
+            content: content
+          })
+        })
+                .then(response => response.text())
+                .then(resultMsg => {
+                  alert(resultMsg);
+                  document.getElementById('eventModal').style.display = 'none';
+                  window.location.reload();
+                })
+                .catch(error => {
+                  console.error('일정 수정 오류:', error);
+                  alert('일정 수정 중 오류가 발생했습니다.');
+                });
+      }
+
       // Function to submit a new event from the modal
       function submitNewEvent() {
         const title = document.getElementById('newEventTitle').value;
@@ -224,29 +267,36 @@
       // Show modal from task row
       function showModalFromTask(title, userName, startDate, endDate, content, calendarId) {
         const modal = document.getElementById('eventModal');
-        document.getElementById('modalTitle').innerText = `[${userName}]${title}`;
-        document.getElementById('modalUserName').innerText = userName || '';
-        document.getElementById('modalStart').innerText = startDate?.split('T')[0] || '';
-        document.getElementById('modalEnd').innerText = endDate?.split('T')[0] || '';
-        document.getElementById('modalContent').innerText = content || '';
+        document.getElementById('modalTitleInput').value = `[${userName}]${title}`;
+        // document.getElementById('modalUserName').innerText = userName || '';
+        document.getElementById('modalStart').value = startDate?.slice(0, 16) || '';
+        document.getElementById('modalEnd').value = endDate?.slice(0, 16) || '';
+        document.getElementById('modalContent').value = content || '';
         selectedCalendarId = calendarId;
         modal.style.display = 'block';
       }
+
     </script>
 
 
 
 <div id="eventModal" class="modal">
-  <h3 id="modalTitle"></h3>
-  <p><strong>작성자:</strong> <span id="modalUserName"></span></p>
-  <p><strong>시작일:</strong> <span id="modalStart"></span></p>
-  <p><strong>마감일:</strong> <span id="modalEnd"></span></p>
+  <p><strong>제목:</strong>
+    <input type="text" id="modalTitleInput" style="width:100%; padding:6px; margin-top:4px; font-size: 18px;">
+  </p>
+  <p><strong>시작일:</strong>
+    <input type="datetime-local" id="modalStart" style="width:100%; padding:6px; margin-top:4px;">
+  </p>
+  <p><strong>마감일:</strong>
+    <input type="datetime-local" id="modalEnd" style="width:100%; padding:6px; margin-top:4px;">
+  </p>
   <p><strong>내용:</strong></p>
-  <div id="modalContent" style="white-space:pre-wrap;"></div>
+  <input type="text" id="modalContent" style="width:100%; padding:6px; margin-top:4px;">
   <div style="margin-top: 16px; text-align: right;">
     <button onclick="document.getElementById('eventModal').style.display='none'">닫기</button>
     <button onclick="markComplete()">✅ 완료</button>
     <button onclick="markIncomplete()">❌ 미완료</button>
+    <button onclick="updateCalendar()">수정</button>
     <button onclick="deleteEvent()">🗑 삭제</button>
   </div>
 </div>

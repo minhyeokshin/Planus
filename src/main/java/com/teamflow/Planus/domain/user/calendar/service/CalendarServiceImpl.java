@@ -151,5 +151,22 @@ public class CalendarServiceImpl implements CalendarService {
         return result;
     }
 
+    @Override
+    public int updateSchedule(String calendarId, String title, String content, LocalDateTime startDate, LocalDateTime endDate) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+        String userId = currentUser.getUserId();
+
+        if (title.startsWith("[")) {
+        String[] parts = title.split("]", 2);
+        title = parts[1];
+        }
+
+        int result = calendarMapper.updateSchedule(userId,calendarId, title, content, startDate, endDate);
+
+        return result;
+    }
+
 
 }

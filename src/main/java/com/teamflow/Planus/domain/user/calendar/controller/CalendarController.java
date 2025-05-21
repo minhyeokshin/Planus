@@ -65,7 +65,7 @@ public class CalendarController {
         int result = calendarService.updateCalendar(calendarId, status);
         log.info("미완료 calendarId: {}", calendarId);
         log.info("미완료 status: {}", status);
-        String msg = "✅ 완료 처리되었습니다";
+        String msg = "미완료 처리되었습니다";
         if (result == 0) {
             msg = "요청이 실패하였습니다.";
         }
@@ -78,7 +78,7 @@ public class CalendarController {
     public String delete(@RequestBody Map<String, Object> map) {
         String calendarId = (String) map.get("calendarId");
         int result = calendarService.deleteCalendar(calendarId);
-        String msg = "✅ 완료 처리되었습니다";
+        String msg = "삭제 완료 처리되었습니다";
         if (result == 0) {
             msg = "요청이 실패하였습니다.";
         }
@@ -103,5 +103,24 @@ public class CalendarController {
         log.info("startDate: {}", startDate);
         log.info("endDate: {}", endDate);
 
+    }
+
+    @PostMapping("/api/updateSchedule")
+    @ResponseBody
+    public String updateSchedule(@RequestBody Map<String, Object> map) {
+        log.info("일정 수정");
+        String calendarId = (String) map.get("calendarId");
+        String title = (String) map.get("title");
+        String content = (String) map.get("content");
+        LocalDateTime startDate = LocalDateTime.parse((String) map.get("startDate"));
+        LocalDateTime endDate = LocalDateTime.parse((String) map.get("endDate"));
+        int result = calendarService.updateSchedule(calendarId, title, content, startDate, endDate);
+
+        String msg = "변경 완료 처리되었습니다";
+        if (result == 0) {
+            msg = "요청이 실패하였습니다.";
+        }
+
+        return msg;
     }
 }
