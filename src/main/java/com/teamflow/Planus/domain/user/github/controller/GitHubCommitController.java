@@ -20,8 +20,8 @@ public class GitHubCommitController {
     @GetMapping("/user/pages/board/commitList")
     public String commitList(Model model) {
         List<CommitDTO> commitList = gitHubCommitService.getCommitList();
-        log.info("commitList: {}", commitList);
-        log.info("commitSize : {}", commitList.size());
+//        log.info("commitList: {}", commitList);
+//        log.info("commitSize : {}", commitList.size());
         model.addAttribute("commitList", commitList);
         return "user/pages/board/commitList";
     }

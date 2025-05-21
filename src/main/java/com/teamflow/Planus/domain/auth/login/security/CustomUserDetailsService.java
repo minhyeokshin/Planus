@@ -36,7 +36,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             customUser.setUserId(user.getUserId());
             customUser.setName(user.getUsername());
             customUser.setGroupId(user.getGroupId());
-            log.info("customUser: {}", customUser);
             return customUser;
     }
 }

@@ -46,4 +46,14 @@
               user_id = #{userId}
     </update>
 
+    <update id="updateSchedule">
+        UPDATE calendar
+        SET
+            title = #{title},
+            content = #{content},
+            start_date = #{startDate},
+            end_date = #{endDate}
+        WHERE calendar_id = #{calendarId}
+        AND user_id = #{userId}
+    </update>
 </mapper>

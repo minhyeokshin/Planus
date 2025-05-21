@@ -16,4 +16,6 @@ public interface CalendarService {
     int deleteCalendar(String calendarId);
 
     int updateCalendar(String calendarId,int status);
+
+    int updateSchedule(String calendarId,String title,String content,LocalDateTime startDate,LocalDateTime endDate);
 }

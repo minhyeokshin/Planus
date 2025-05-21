@@ -1,6 +1,7 @@
 package com.teamflow.Planus.domain.user.github.service;
 
 import com.teamflow.Planus.cache.GitIssueCache;
+import com.teamflow.Planus.domain.auth.login.security.CustomUserDetails;
 import com.teamflow.Planus.domain.user.github.mapper.GitHubIssueMapper;
 import com.teamflow.Planus.dto.IssueDTO;
 import com.teamflow.Planus.util.TokenEncryptor;
@@ -12,6 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,37 +79,51 @@ public class GitHubIssueServiceImpl implements GitHubIssueService {
                             .state(GHIssueState.ALL)
                             .list();
 
-                    for (GHIssue issue : issues) {
-                        IssueVO issueVO = IssueVO.builder()
-                                .issueId(String.valueOf(issue.getId()))
-                                .issueTitle(issue.getTitle())
-                                .userName(issue.getUser().getLogin())
-                                .userEmail(issue.getUser().getEmail()) // nullable
-                                .issueDate(issue.getCreatedAt()
-                                        .atZone(ZoneId.systemDefault())
-                                        .toLocalDateTime())
-                                .issueStatus(issue.getState().toString().toLowerCase())
-                                .issueURL(issue.getHtmlUrl().toString())
-                                .groupId(groupVO.getGroupId())
-                                .build();
 
-                        issueVOList.add(issueVO);
-                        issueListCache.add(issueVO);
+                    for (GHIssue issue : issues) {
+                        if(!issue.isPullRequest()) {
+                            IssueVO issueVO = IssueVO.builder()
+                                    .issueId(String.valueOf(issue.getId()))
+                                    .issueTitle(issue.getTitle())
+                                    .userName(issue.getUser().getLogin())
+                                    .userEmail(issue.getUser().getEmail()) // nullable
+                                    .issueDate(issue.getCreatedAt()
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDateTime())
+                                    .issueStatus(issue.getState().toString().toLowerCase())
+                                    .issueURL(issue.getHtmlUrl().toString())
+                                    .groupId(groupVO.getGroupId())
+                                    .build();
+
+                            issueVOList.add(issueVO);
+                            issueListCache.add(issueVO);
+                        }
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            githubIssueMapper.insertIssue(issueVOList);
+            if(!issueVOList.isEmpty()) {
+                githubIssueMapper.insertIssue(issueVOList);
+            }
             GitIssueCache.getInstance().setIssueVOList(issueListCache);
         }
     }
 
     @Override
     public List<IssueDTO> getIssueList() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
         List<IssueDTO> issueDTOList = new ArrayList<>();
         List<IssueVO> issueVOList = githubIssueMapper.getIssueList();
+
+        issueVOList =
+                issueVOList.stream()
+                        .filter(vo -> vo.getGroupId().equals(customUserDetails.getGroupId()))
+                        .toList();
         
         for (IssueVO issueVO : issueVOList) {
             IssueDTO issueDTO = IssueDTO.builder()

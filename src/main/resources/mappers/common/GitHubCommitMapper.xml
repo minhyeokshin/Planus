@@ -22,7 +22,7 @@
         <foreach collection="list" item="commit" separator=",">
             (#{commit.commitId}, #{commit.commitMsg}, #{commit.groupId}, #{commit.userName}, #{commit.userEmail}, #{commit.commitDate}, #{commit.commitURL})
         </foreach>
-        ON DUPLICATE KEY UPDATE commit_id = commit_id , group_id = group_id
+        ON DUPLICATE KEY UPDATE commit_id = VALUES(commit_id) , group_id = VALUES(group_id)
     </insert>
 
     <select id="getCommitList" resultType="com.teamflow.Planus.vo.CommitVO">
